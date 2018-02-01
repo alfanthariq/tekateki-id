@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">TekTekSil</string>
+    <string name="action_horizontal">Horizontal</string>
+    <string name="action_vertical">Vertical</string>
+
+    <!-- Setting Subtitle -->
+    <string name="sub_akun">Informasi akun</string>
+    <string name="sub_umum">Umum</string>
+    <string name="sub_about">About</string>
+    <!-- Setting button -->
+    <string name="menu_pengaturan">Pengaturan</string>
+    <string name="menu_rule">Aturan permainan</string>
+    <string name="menu_how_to">Cara bermain</string>
+    <string name="menu_riwayat">Riwayat permainan</string>
+    <string name="menu_versi">Versi</string>
+    <string name="menu_contact">Contact</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_rate">Rate me</string>
+    <!-- Login -->
+    <string name="capt_masuk">Masuk</string>
+    <string name="capt_keluar">Keluar</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_sign_up">Masuk</string>
+    <string name="btn_sign_up_fb">Masuk dengan Facebook</string>
+    <string name="btn_forgot">Kirim</string>
+    <string name="err_msg_email">Isikan alamat email yang valid</string>
+    <string name="err_msg_password">Isikan password anda</string>
+    <string name="err_msg_password_k">Konfirmasi password tidak sama</string>
+    <string name="err_msg_nama">Isikan nama anda</string>
+    <string name="err_msg_kabkota">Anda belum memilih kota asal</string>
+    <string name="forgot_pwd">Lupa password? ➠</string>
+    <string name="registrasi">Saya belum punya akun ➠</string>
+    <string name="konfirm_pass">Konfirmasi password</string>
+    <string name="full_name">Nama</string>
+    <string name="prov">Provinsi</string>
+    <string name="kabkota">Kabupaten / Kota</string>
+    <string name="btn_registrasi">Daftar Sekarang</string>
+    <string name="title_reg">Buat akun baru</string>
+    <string name="hint_new_password">Password baru</string>
+
+    // Facebook
+    <string name="facebook_app_id">1823762604583482</string>
+    <string name="fb_login_protocol_scheme">fb1823762604583482</string>
+</resources>

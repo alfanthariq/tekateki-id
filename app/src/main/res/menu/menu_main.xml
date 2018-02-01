@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="Available TTS"
+        />
+
+    <item
+        android:title="Downloaded TTS"
+        />
+
+    <item
+        android:title="Rankings"
+        />
+
+    <item
+        android:title="Connect"
+        />
+
+    <item
+        android:title="Settings"
+        />
+</menu>

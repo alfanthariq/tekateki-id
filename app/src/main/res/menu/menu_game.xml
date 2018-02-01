@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.alfanthariq.tekteksil.GameActivity">
+    <item
+        android:id="@+id/timer"
+        android:orderInCategory="100"
+        android:title="Time Lapsed"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_submit"
+        android:orderInCategory="100"
+        android:title="Submit"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_cek_jawaban"
+        android:orderInCategory="200"
+        android:title="Cek Jawaban"
+        />
+    <item
+        android:id="@+id/menu_reset_time"
+        android:orderInCategory="300"
+        android:title="Reset Timer"
+        />
+    <item
+        android:id="@+id/menu_hapus"
+        android:orderInCategory="400"
+        android:title="Hapus TTS"
+        />
+</menu>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryDark">#388E3C</color>
+    <color name="colorPrimary">#4CAF50</color>
+    <color name="colorAccent">#FF5722</color>
+    <color name="windowBackground">#ffffff</color>
+    <color name="colorControlNormal">#C8E6C9</color>
+    <color name="colorControlActivated">#C8E6C9</color>
+    <color name="colorTextPrimary">#212121</color>
+    <color name="colorTextSecondary">#757575</color>
+    <color name="appcolor_black">#333333</color>
+    <color name="navbar_color">@color/appcolor_black</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorFalseRed">#f27d7d</color>
+    <color name="colorBlock">#388E3C</color>
+    <color name="colorValidation">#F63D2B</color>
+    <color name="colorFacebook">#475992</color>
+    <color name="colorFacebookActivated">#697396</color>
+
+    <color name="color_tab_1">#455C65</color>
+    <color name="color_tab_2">#00886A</color>
+    <color name="color_tab_3">#8B6B62</color>
+    <color name="color_tab_4">#6C4A42</color>
+    <color name="color_tab_5">#F63D2B</color>
+
+    <color name="color_notification_back">#ffcd33</color>
+    <color name="color_notification_text">#3E4757</color>
+
+    <array name="tab_colors">
+        <item name="tab_1">#455C65</item>
+        <item name="tab_2">#00886A</item>
+        <item name="tab_3">#8B6B62</item>
+        <item name="tab_4">#6C4A42</item>
+        <item name="tab_5">#F63D2B</item>
+    </array>
+</resources>
