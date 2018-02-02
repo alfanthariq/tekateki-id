@@ -54,7 +54,7 @@ dependencies {
     implementation 'com.facebook.android:facebook-share:4.28.0'
 
     compile 'com.google.android.gms:play-services-ads:11.8.0'
-    compile ('com.github.worker8:tourguide:1.0.18-SNAPSHOT@aar') {
-        transitive=true
+    compile('com.github.worker8:tourguide:1.0.18-SNAPSHOT@aar') {
+        transitive = true
     }
 }

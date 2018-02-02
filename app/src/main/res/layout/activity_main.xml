@@ -50,7 +50,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+        ads:adUnitId="@string/unit_id_admob">
     </com.google.android.gms.ads.AdView>
 
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation

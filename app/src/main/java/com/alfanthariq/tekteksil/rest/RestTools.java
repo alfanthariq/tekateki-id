@@ -1,7 +1,11 @@
 package com.alfanthariq.tekteksil.rest;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -26,6 +30,39 @@ public class RestTools {
             }
             return sb.toString();
         } catch (java.security.NoSuchAlgorithmException e) {
+        }
+        return null;
+    }
+
+    public static String resizeBase64Image(String base64image){
+        byte [] encodeByte= Base64.decode(base64image.getBytes(),Base64.DEFAULT);
+        BitmapFactory.Options options=new BitmapFactory.Options();
+        options.inPurgeable = true;
+        Bitmap image = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length,options);
+
+        if(image.getHeight() <= 400 && image.getWidth() <= 400){
+            return base64image;
+        }
+        image = Bitmap.createScaledBitmap(image, 500, 250, false);
+
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG,100, baos);
+
+        byte [] b=baos.toByteArray();
+        System.gc();
+        return Base64.encodeToString(b, Base64.NO_WRAP);
+    }
+
+    public static Bitmap getImageIcon(String base64Image) {
+        if(base64Image!=null) {
+            byte[] image_data = Base64.decode(base64Image, Base64.NO_WRAP);
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.outHeight = 200; //32 pixles
+            options.outWidth = 500; //32 pixles
+            options.outMimeType = "image/png"; //this could be image/jpeg, image/png, etc
+
+            return BitmapFactory.decodeByteArray(image_data, 0, image_data.length, options);
         }
         return null;
     }

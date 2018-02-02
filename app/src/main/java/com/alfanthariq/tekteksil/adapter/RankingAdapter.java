@@ -59,7 +59,7 @@ public class RankingAdapter extends BaseAdapter {
         // getting movie data for the row
         RankingObject m = rankItems.get(position);
 
-        rank.setText(Integer.toString(m.getRanking()));
+        rank.setText("Rank : "+Integer.toString(m.getRanking()));
         nama.setText(m.getFull_name());
         daerah.setText(m.getKota()+", "+m.getProv());
         skor.setText(Integer.toString(m.getTotal_skor()));

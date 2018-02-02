@@ -71,6 +71,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -204,7 +205,8 @@ public class GameActivity extends AppCompatActivity
     }
 
     private void SubmitScore(){
-        Call<GlobalResponse> call = api.submit_score(id_tts, pref.getString("email", ""), skor);
+        TimeZone tz = TimeZone.getDefault();
+        Call<GlobalResponse> call = api.submit_score(id_tts, pref.getString("email", ""), skor, tz.getID());
         // Set up progress before call
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Mengirim skor ...");

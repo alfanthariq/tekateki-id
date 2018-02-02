@@ -18,22 +18,29 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alfanthariq.tekteksil.LoginActivity;
+import com.alfanthariq.tekteksil.NewsActivity;
 import com.alfanthariq.tekteksil.R;
 import com.alfanthariq.tekteksil.RegistrasiActivity;
 import com.alfanthariq.tekteksil.adapter.AvailableAdapter;
 import com.alfanthariq.tekteksil.adapter.DownloadedAdapter;
+import com.alfanthariq.tekteksil.adapter.NewsAdapter;
 import com.alfanthariq.tekteksil.adapter.RankingAdapter;
 import com.alfanthariq.tekteksil.helper.EndlessScrollListener;
 import com.alfanthariq.tekteksil.helper.GameSettingHelper;
 import com.alfanthariq.tekteksil.model.AvailableTts;
 import com.alfanthariq.tekteksil.model.AvailableTtsResponse;
 import com.alfanthariq.tekteksil.model.GlobalResponse;
+import com.alfanthariq.tekteksil.model.NewsDetail;
+import com.alfanthariq.tekteksil.model.NewsObject;
+import com.alfanthariq.tekteksil.model.NewsResponse;
 import com.alfanthariq.tekteksil.model.RankingDetail;
 import com.alfanthariq.tekteksil.model.RankingObject;
 import com.alfanthariq.tekteksil.model.RankingResponse;
@@ -44,6 +51,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,9 +81,11 @@ public class BottomNavFragment extends Fragment {
     private boolean shouldRefreshOnResume = false;
     private View view;
     private int limit = 10;
-    private int last_idx;
+    private int last_idx_rank, last_idx_news;
     private List<RankingObject> rankList = new ArrayList<RankingObject>();
+    private List<NewsObject> newsList = new ArrayList<NewsObject>();
     private RankingAdapter rankAdapter = null;
+    private NewsAdapter newsAdapter = null;
     private View footer;
 
     // API
@@ -95,7 +105,8 @@ public class BottomNavFragment extends Fragment {
         api = ApiInterface.retrofit.create(ApiInterface.class);
         mDbHelper = new GameSettingHelper(getContext());
         getPrefs();
-        last_idx = 0;
+        last_idx_rank = 0;
+        last_idx_news = 0;
 
         if (getArguments().getInt("index", 0) == 0) {
             view = inflater.inflate(R.layout.fragment_available_tts, container, false);
@@ -111,7 +122,7 @@ public class BottomNavFragment extends Fragment {
             return view;
         } else if (getArguments().getInt("index", 0) == 3) {
             view = inflater.inflate(R.layout.fragment_news, container, false);
-            initShare(view);
+            initNews(view);
             return view;
         } else if (getArguments().getInt("index", 0) == 4) {
             view = inflater.inflate(R.layout.fragment_settings, container, false);
@@ -201,6 +212,30 @@ public class BottomNavFragment extends Fragment {
         swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         fragmentContainer = (FrameLayout) view.findViewById(R.id.frameBg);
 
+        String[] arraySpinner = new String[] {
+                "Bulan ini", "Semester ini", "Tahun ini"
+        };
+        final Spinner s = (Spinner) view.findViewById(R.id.spin_tipe);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item, arraySpinner);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        s.setAdapter(adapter);
+        s.setSelection(0);
+        s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                rankList.clear();
+                rankAdapter.notifyDataSetChanged();
+                last_idx_rank = 0;
+                getRankPaging(i, last_idx_rank);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         swipeRefresh.setColorSchemeColors(getResources().getColor(R.color.colorPrimary),
                 getResources().getColor(R.color.colorPrimaryDark),
                 getResources().getColor(R.color.colorAccent));
@@ -208,11 +243,12 @@ public class BottomNavFragment extends Fragment {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (last_idx>0) {
+                if (last_idx_rank>0) {
                     rankList.clear();
                     rankAdapter.notifyDataSetChanged();
-                    last_idx = 0;
-                    getRankPaging(last_idx);
+                    last_idx_rank = 0;
+                    int tipe = s.getSelectedItemPosition();
+                    getRankPaging(tipe, last_idx_rank);
                 }
             }
         });
@@ -229,17 +265,69 @@ public class BottomNavFragment extends Fragment {
             public boolean onLoadMore(int page, int totalItemsCount) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to your AdapterView
-                getRankPaging(last_idx);
+                int tipe = s.getSelectedItemPosition();
+                getRankPaging(tipe, last_idx_rank);
                 // or loadNextDataFromApi(totalItemsCount);
                 return true; // ONLY if more data is actually being loaded; false otherwise.
             }
         });
 
-        getRankPaging(last_idx);
+        int tipe = s.getSelectedItemPosition();
+        getRankPaging(tipe, last_idx_rank);
     }
 
-    private void initShare(View view) {
-        fragmentContainer = view.findViewById(R.id.frameBg);
+    private void initNews(View view) {
+        listView = (ListView) view.findViewById(R.id.list);
+        swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        fragmentContainer = (FrameLayout) view.findViewById(R.id.frameBg);
+
+        swipeRefresh.setColorSchemeColors(getResources().getColor(R.color.colorPrimary),
+                getResources().getColor(R.color.colorPrimaryDark),
+                getResources().getColor(R.color.colorAccent));
+
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (last_idx_news>0) {
+                    newsList.clear();
+                    newsAdapter.notifyDataSetChanged();
+                    last_idx_news = 0;
+                    getNewsPaging(last_idx_news);
+                }
+            }
+        });
+
+        footer = ((LayoutInflater)this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.footer_loader, null, false);
+        newsAdapter = new NewsAdapter(getActivity(), newsList);
+        listView.setAdapter(newsAdapter);
+
+        View empty = view.findViewById(R.id.emptyView);
+        listView.setEmptyView(empty);
+        listView.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to your AdapterView
+                getNewsPaging(last_idx_news);
+                // or loadNextDataFromApi(totalItemsCount);
+                return true; // ONLY if more data is actually being loaded; false otherwise.
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getContext(), NewsActivity.class);
+                intent.putExtra("id", newsList.get(i).getId());
+                intent.putExtra("judul", newsList.get(i).getJudul());
+                intent.putExtra("tanggal", newsList.get(i).getPublish_date());
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
+            }
+        });
+
+        getNewsPaging(last_idx_news);
     }
 
     public void updateInfo(){
@@ -381,9 +469,9 @@ public class BottomNavFragment extends Fragment {
         }
     }
 
-    private void getRankPaging(int startIdx){
+    private void getRankPaging(int tipe, int startIdx){
         swipeRefresh.setRefreshing(true);
-        Call<RankingResponse> call = api.getRank(startIdx, limit);
+        Call<RankingResponse> call = api.getRank(tipe, startIdx, limit);
         call.enqueue(new Callback<RankingResponse>() {
             @Override
             public void onResponse(Call<RankingResponse>call, Response<RankingResponse> response) {
@@ -404,7 +492,7 @@ public class BottomNavFragment extends Fragment {
                     ranking.setKota(kota);
                     ranking.setProv(prov);
                     rankList.add(ranking);
-                    last_idx += 1;
+                    last_idx_rank += 1;
                 }
                 rankAdapter.notifyDataSetChanged();
                 swipeRefresh.setRefreshing(false);
@@ -416,6 +504,43 @@ public class BottomNavFragment extends Fragment {
                 Log.e(TAG, t.toString());
                 swipeRefresh.setRefreshing(true);
                 Toast.makeText(getContext(), "Gagal mengambil data ranking", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getNewsPaging(int startIdx){
+        swipeRefresh.setRefreshing(true);
+        Call<NewsResponse> call = api.getNews(startIdx, limit);
+        call.enqueue(new Callback<NewsResponse>() {
+            @Override
+            public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
+                List<NewsDetail> data = response.body().getData();
+                for (int i = 0; i < data.size(); i++) {
+                    int id = data.get(i).getId();
+                    String judul = data.get(i).getJudul();
+                    String ctn = data.get(i).getCtn();
+                    String img64 = data.get(i).getImg64();
+                    String p_date = data.get(i).getPublish_date();
+
+                    NewsObject news = new NewsObject();
+                    news.setId(id);
+                    news.setJudul(judul);
+                    news.setCtn(ctn);
+                    news.setImg64(img64);
+                    news.setPublish_date(p_date);
+                    newsList.add(news);
+                    last_idx_news += 1;
+                }
+                newsAdapter.notifyDataSetChanged();
+                swipeRefresh.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(Call<NewsResponse>call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG, t.toString());
+                swipeRefresh.setRefreshing(true);
+                Toast.makeText(getContext(), "Gagal mengambil berita terbaru", Toast.LENGTH_SHORT).show();
             }
         });
     }

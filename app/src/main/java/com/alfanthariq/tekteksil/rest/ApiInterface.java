@@ -3,6 +3,8 @@ package com.alfanthariq.tekteksil.rest;
 import com.alfanthariq.tekteksil.model.AvailableTtsResponse;
 import com.alfanthariq.tekteksil.model.KabkotaResponse;
 import com.alfanthariq.tekteksil.model.LoginResponse;
+import com.alfanthariq.tekteksil.model.NewsDataResponse;
+import com.alfanthariq.tekteksil.model.NewsResponse;
 import com.alfanthariq.tekteksil.model.ProvinsiResponse;
 import com.alfanthariq.tekteksil.model.GlobalResponse;
 import com.alfanthariq.tekteksil.model.RankingResponse;
@@ -32,8 +34,14 @@ public interface ApiInterface {
     @GET("kabkota/{id_provinsi}")
     Call<KabkotaResponse> getKabkota(@Path("id_provinsi") int id_prov);
 
-    @GET("rank/{start_idx}/{limit}")
-    Call<RankingResponse> getRank(@Path("start_idx") int start_idx, @Path("limit") int limit);
+    @GET("rank/{tipe}/{start_idx}/{limit}")
+    Call<RankingResponse> getRank(@Path("tipe") int tipe, @Path("start_idx") int start_idx, @Path("limit") int limit);
+
+    @GET("news-list/{start_idx}/{limit}")
+    Call<NewsResponse> getNews(@Path("start_idx") int start_idx, @Path("limit") int limit);
+
+    @GET("news/{id}")
+    Call<NewsDataResponse> getNewsByID(@Path("id") int id);
 
     @FormUrlEncoded
     @POST("login/")
@@ -54,7 +62,7 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("submit_score/")
     Call<GlobalResponse> submit_score(@Field("id_tts") int id_tts, @Field("email") String email,
-                             @Field("skor") int skor);
+                             @Field("skor") int skor, @Field("timezone") String timezone);
 
     @FormUrlEncoded
     @POST("forgot/")
