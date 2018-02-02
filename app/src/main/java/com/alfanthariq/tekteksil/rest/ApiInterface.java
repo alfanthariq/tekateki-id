@@ -42,6 +42,10 @@ public interface ApiInterface {
                               @Field("full_name") String full_name);
 
     @FormUrlEncoded
+    @POST("logout/")
+    Call<GlobalResponse> logout(@Field("email") String email);
+
+    @FormUrlEncoded
     @POST("register/")
     Call<GlobalResponse> reg(@Field("auth_type") int auth_type, @Field("email") String email,
                              @Field("password_hash") String password, @Field("user_id") String user_id,

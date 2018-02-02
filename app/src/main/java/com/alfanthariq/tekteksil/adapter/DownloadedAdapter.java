@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,8 @@ import android.widget.Toast;
 import com.alfanthariq.tekteksil.GameActivity;
 import com.alfanthariq.tekteksil.R;
 import com.alfanthariq.tekteksil.helper.GameSettingHelper;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -62,17 +65,19 @@ public class DownloadedAdapter extends CursorAdapter {
         TextView tvEdisiStr = (TextView) view.findViewById(R.id.tvEditionStr);
         TextView tvEdisiTgl = (TextView) view.findViewById(R.id.tvEditionDate);
         ImageView imgLeft = (ImageView) view.findViewById(R.id.imgLeft);
+        LinearLayout linLayImgLeft = (LinearLayout) view.findViewById(R.id.linLayImgLeft);
 
         playButton = (AwesomeButton) view.findViewById(R.id.btnPlay);
         delButton = (AwesomeButton) view.findViewById(R.id.btnDel);
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Integer pos = (Integer) view.getTag();
-                cursor.moveToPosition(pos);
+                Integer itemPos = (Integer) view.getTag();
+                cursor.moveToPosition(itemPos);
+
+                int isSent = cursor.getInt(cursor.getColumnIndexOrThrow("is_sent"));
                 String fileName = cursor.getString(cursor.getColumnIndexOrThrow("db_name"));
                 String ed_str = cursor.getString(cursor.getColumnIndexOrThrow("edition_str"));
-                int isSent = cursor.getInt(cursor.getColumnIndexOrThrow("is_sent"));
                 String pathDB = context.getFilesDir().getAbsolutePath() + File.separator + "tts" + File.separator + fileName;
                 File file = new File(pathDB);
                 if (file.exists()) {
@@ -133,6 +138,7 @@ public class DownloadedAdapter extends CursorAdapter {
         });
 
         int pos = cursor.getPosition();
+
         playButton.setTag(pos);
         delButton.setTag(pos);
 
@@ -151,5 +157,14 @@ public class DownloadedAdapter extends CursorAdapter {
         // Populate fields with extracted properties
         tvEdisiStr.setText(edisi_str);
         tvEdisiTgl.setText(edisi_tgl);
+
+        final int isSent = cursor.getInt(cursor.getColumnIndexOrThrow("is_sent"));
+        if (isSent==1) {
+            imgLeft.setImageDrawable(new IconicsDrawable(context).icon(FontAwesome.Icon.faw_check).color(context.getResources().getColor(R.color.colorPrimaryDark)).sizeDp(15));
+            linLayImgLeft.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
+        } else {
+            linLayImgLeft.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+        }
+
     }
 }

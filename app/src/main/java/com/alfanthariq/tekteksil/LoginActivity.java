@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        Toast.makeText(LoginActivity.this, "Login sukses", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(LoginActivity.this, "Login sukses", Toast.LENGTH_SHORT).show();
                         getFbInfo(loginResult);
                     }
 
@@ -196,13 +196,13 @@ public class LoginActivity extends AppCompatActivity {
         if (!validatePassword()) {
             return;
         }
-        Login();
+        Login(0, inputEmail.getText().toString(), "", inputPassword.getText().toString(), "");
     }
 
-    private void Login(){
-        String pwd_hash = MD5(inputPassword.getText().toString());
-        Call<LoginResponse> call = api.login(0, inputEmail.getText().toString(), "",
-                                             pwd_hash, "");
+    private void Login(final int auth_type, String email, String user_id, String password, String fullname){
+        String pwd_hash = MD5(password);
+        Call<LoginResponse> call = api.login(auth_type, email, user_id,
+                                             pwd_hash, fullname);
         Log.d(TAG, "Password : "+pwd_hash);
         // Set up progress before call
         final ProgressDialog pDialog = new ProgressDialog(this);
@@ -221,31 +221,40 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.body()!=null) {
                         Log.e(TAG, new Gson().toJson(response.body()));
 
-                        JSONObject jsonObj = new JSONObject(new Gson().toJson(response.body()));
-                        if (jsonObj.has("data")) {
-                            List<LoginDetail> data = response.body().getData();
-                            for (int i = 0; i < data.size(); i++) {
-                                String email = data.get(i).getEmail();
-                                int id_kabkota = data.get(i).getId_kabkota();
-                                String user_id = data.get(i).getUser_id();
-                                String full_name = data.get(i).getFull_name();
+                        if (auth_type==0) {
+                            JSONObject jsonObj = new JSONObject(new Gson().toJson(response.body()));
+                            if (jsonObj.has("data")) {
+                                List<LoginDetail> data = response.body().getData();
+                                for (int i = 0; i < data.size(); i++) {
+                                    String email = data.get(i).getEmail();
+                                    int id_kabkota = data.get(i).getId_kabkota();
+                                    String user_id = data.get(i).getUser_id();
+                                    String full_name = data.get(i).getFull_name();
 
-                                editor = pref.edit();
-                                editor.putString("email", email);
-                                editor.putString("user_id", user_id);
-                                editor.putInt("id_kabkota", id_kabkota);
-                                editor.putString("full_name", full_name);
-                                editor.putInt("auth_type", 0);
-                                editor.apply();
+                                    editor = pref.edit();
+                                    editor.putString("email", email);
+                                    editor.putString("user_id", user_id);
+                                    editor.putInt("id_kabkota", id_kabkota);
+                                    editor.putString("full_name", full_name);
+                                    editor.putInt("auth_type", 0);
+                                    editor.apply();
+                                    pDialog.dismiss();
+                                    Toast.makeText(LoginActivity.this, "Login berhasil", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                                }
+                            } else {
+                                String message = response.body().getMessage();
                                 pDialog.dismiss();
-                                Toast.makeText(LoginActivity.this, "Login berhasil", Toast.LENGTH_SHORT).show();
-                                finish();
-                                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                                Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            String message = response.body().getMessage();
-                            pDialog.dismiss();
-                            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                            Boolean stat = response.body().isStatus();
+                            if (stat) {
+                                pDialog.dismiss();
+                                LoginActivity.this.finish();
+                                Toast.makeText(LoginActivity.this, "Login berhasil", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 } catch (JSONException e) {
@@ -336,6 +345,7 @@ public class LoginActivity extends AppCompatActivity {
                             String id = object.getString("id");
                             String first_name = object.getString("first_name");
                             String last_name = object.getString("last_name");
+                            String full_name = first_name +" "+ last_name;
                             String gender = object.getString("gender");
                             String image_url = "http://graph.facebook.com/" + id + "/picture?type=large";
                             String email;
@@ -349,10 +359,10 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString("email", email);
                             editor.putString("user_id", id);
                             editor.putInt("id_kabkota", 99);
-                            editor.putString("full_name", first_name + " " + last_name);
+                            editor.putString("full_name", full_name);
                             editor.putInt("auth_type", 1);
                             editor.apply();
-                            LoginActivity.this.finish();
+                            Login(1, email, id, "", full_name);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

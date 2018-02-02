@@ -23,7 +23,7 @@ public class GameSettingHelper extends SQLiteAssetHelper {
 
     private static final String TAG = "GameSettingHelper";
     private static final String DATABASE_NAME = "settings.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 6;
 
 
     public GameSettingHelper(Context context) {
@@ -100,8 +100,9 @@ public class GameSettingHelper extends SQLiteAssetHelper {
         }
     }
 
-    public long addAvailableTTS(int ed_int, String ed_str, String tgl_terbit, String db_name){
+    public long addAvailableTTS(int id, int ed_int, String ed_str, String tgl_terbit, String db_name){
         ContentValues cv = new ContentValues();
+        cv.put("_id", id);
         cv.put("edition_int", ed_int);
         cv.put("edition_str", ed_str);
         cv.put("tgl_terbit", tgl_terbit);

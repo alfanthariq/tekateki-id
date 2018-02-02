@@ -23,11 +23,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:id="@+id/linLayImgLeft">
 
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:scaleType="fitCenter"
                 android:id="@+id/imgLeft"
                 android:src="@drawable/list_tts"/>
         </LinearLayout>

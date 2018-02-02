@@ -150,10 +150,10 @@ public class RegistrasiActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<GlobalResponse>call, Response<GlobalResponse> response) {
                 if (response.body()!=null) {
-                    Log.e(TAG, new Gson().toJson(response.body()));
                     String message = response.body().getMessage();
                     Boolean status = response.body().isStatus();
                     pDialog.dismiss();
+                    RegistrasiActivity.this.finish();
                     Toast.makeText(RegistrasiActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
             }

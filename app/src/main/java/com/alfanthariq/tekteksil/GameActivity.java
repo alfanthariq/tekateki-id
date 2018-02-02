@@ -136,7 +136,9 @@ public class GameActivity extends AppCompatActivity
         Intent intent = getIntent();
         DBNAME = intent.getStringExtra("dbname");
         title_app.setText(intent.getStringExtra("ed_str"));
-        id_tts = intent.getIntExtra("id_tts", 0);
+        id_tts = Integer.valueOf(intent.getStringExtra("id_tts"));
+                //intent.getIntExtra("id_tts", 0);
+        Toast.makeText(this, "ID TTS : "+Integer.toString(id_tts), Toast.LENGTH_SHORT).show();
         isSent = intent.getIntExtra("is_sent", 0);
         isCreate = true;
         skor = 0;

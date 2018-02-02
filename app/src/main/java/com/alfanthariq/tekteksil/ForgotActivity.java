@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
@@ -34,8 +35,8 @@ import static com.alfanthariq.tekteksil.rest.RestTools.MD5;
 public class ForgotActivity extends AppCompatActivity {
     private String TAG = "ForgotActivity";
     private Toolbar toolbar;
-    private EditText inputPassword;
-    private TextInputLayout inputLayoutPassword;
+    private EditText inputEmail, inputPassword;
+    private TextInputLayout inputLayoutEmail, inputLayoutPassword;
     private Button btnKirim;
     private SharedPreferences pref;
 
@@ -61,9 +62,13 @@ public class ForgotActivity extends AppCompatActivity {
 
         inputLayoutPassword = (TextInputLayout) findViewById(R.id.input_layout_password);
         inputPassword = (EditText) findViewById(R.id.input_password);
+        inputLayoutEmail = (TextInputLayout) findViewById(R.id.input_layout_email);
+        inputEmail = (EditText) findViewById(R.id.input_email);
+
         btnKirim = (Button) findViewById(R.id.btn_forgot);
         btnKirim.setOnClickListener(kirimReq);
 
+        inputEmail.addTextChangedListener(new ForgotActivity.MyTextWatcher(inputEmail));
         inputPassword.addTextChangedListener(new ForgotActivity.MyTextWatcher(inputPassword));
 
         api = ApiInterface.retrofit.create(ApiInterface.class);
@@ -107,15 +112,36 @@ public class ForgotActivity extends AppCompatActivity {
     }
 
     private void submitForm() {
+        if (!validateEmail()) {
+            return;
+        }
         if (!validatePassword()) {
             return;
         }
         SendRequest();
     }
 
+    private boolean validateEmail() {
+        String email = inputEmail.getText().toString().trim();
+
+        if (email.isEmpty() || !isValidEmail(email)) {
+            inputLayoutEmail.setError(getString(R.string.err_msg_email));
+            requestFocus(inputEmail);
+            return false;
+        } else {
+            inputLayoutEmail.setErrorEnabled(false);
+        }
+
+        return true;
+    }
+
+    private static boolean isValidEmail(String email) {
+        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
     private void SendRequest(){
         String pwd_hash = MD5(inputPassword.getText().toString());
-        Call<GlobalResponse> call = api.send_forgot(pref.getString("email", ""), pwd_hash);
+        Call<GlobalResponse> call = api.send_forgot(inputEmail.getText().toString(), pwd_hash);
         Log.d(TAG, "Password : "+pwd_hash);
         // Set up progress before call
         final ProgressDialog pDialog = new ProgressDialog(this);
@@ -135,6 +161,7 @@ public class ForgotActivity extends AppCompatActivity {
                     String message = response.body().getMessage();
                     Boolean status = response.body().isStatus();
                     pDialog.dismiss();
+                    ForgotActivity.this.finish();
                     Toast.makeText(ForgotActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -144,7 +171,7 @@ public class ForgotActivity extends AppCompatActivity {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
                 pDialog.dismiss();
-                Toast.makeText(ForgotActivity.this, "Registrasi gagal", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ForgotActivity.this, "Kirim permintaan gagal, silahkan coba kembali", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -183,6 +210,9 @@ public class ForgotActivity extends AppCompatActivity {
 
         public void afterTextChanged(Editable editable) {
             switch (view.getId()) {
+                case R.id.input_email:
+                    validateEmail();
+                    break;
                 case R.id.input_password:
                     validatePassword();
                     break;

@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.alfanthariq.tekteksil.LoginActivity;
 import com.alfanthariq.tekteksil.R;
+import com.alfanthariq.tekteksil.RegistrasiActivity;
 import com.alfanthariq.tekteksil.adapter.AvailableAdapter;
 import com.alfanthariq.tekteksil.adapter.DownloadedAdapter;
 import com.alfanthariq.tekteksil.adapter.RankingAdapter;
@@ -32,6 +33,7 @@ import com.alfanthariq.tekteksil.helper.EndlessScrollListener;
 import com.alfanthariq.tekteksil.helper.GameSettingHelper;
 import com.alfanthariq.tekteksil.model.AvailableTts;
 import com.alfanthariq.tekteksil.model.AvailableTtsResponse;
+import com.alfanthariq.tekteksil.model.GlobalResponse;
 import com.alfanthariq.tekteksil.model.RankingDetail;
 import com.alfanthariq.tekteksil.model.RankingObject;
 import com.alfanthariq.tekteksil.model.RankingResponse;
@@ -264,10 +266,11 @@ public class BottomNavFragment extends Fragment {
                 public void onClick(View view) {
                     if (auth_type==1) {
                         disconnectFromFacebook();
+                        logout(1);
                     } else if (auth_type==2) {
-
+                        logout(2);
                     } else {
-
+                        logout(0);
                     }
                     editor = pref.edit();
                     editor.remove("email");
@@ -425,12 +428,13 @@ public class BottomNavFragment extends Fragment {
             public void onResponse(Call<AvailableTtsResponse>call, Response<AvailableTtsResponse> response) {
                 List<AvailableTts> data = response.body().getData();
                 for (int i = 0; i < data.size(); i++) {
+                    int id = data.get(i).getIdTts();
                     String ed_string = data.get(i).getEdisiStr();
                     int ed_int = data.get(i).getEdisiInt();
                     String tgl_terbit = data.get(i).getTglTerbit();
                     String nama_db = data.get(i).getNamaFile();
 
-                    mDbHelper.addAvailableTTS(ed_int, ed_string, tgl_terbit, nama_db);
+                    mDbHelper.addAvailableTTS(id, ed_int, ed_string, tgl_terbit, nama_db);
                 }
                 mDbHelper.close();
                 swipeRefresh.setRefreshing(false);
@@ -449,6 +453,43 @@ public class BottomNavFragment extends Fragment {
                 Log.e(TAG, t.toString());
                 Toast.makeText(getContext(), "Gagal mendapatkan TTS", Toast.LENGTH_SHORT).show();
                 swipeRefresh.setRefreshing(false);
+            }
+        });
+    }
+
+    private void logout(final int auth_type){
+        String email = pref.getString("email", "");
+        Call<GlobalResponse> call = api.logout(email);
+        // Set up progress before call
+        final ProgressDialog pDialog = new ProgressDialog(getActivity());
+
+        if (auth_type==0) {
+            pDialog.setMessage("Logging out ...");
+            pDialog.setIndeterminate(false);
+            pDialog.setMax(100);
+            pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+        call.enqueue(new Callback<GlobalResponse>() {
+            @Override
+            public void onResponse(Call<GlobalResponse>call, Response<GlobalResponse> response) {
+                String message = response.body().getMessage();
+                Boolean status = response.body().isStatus();
+                if (auth_type==0) {
+                    pDialog.dismiss();
+                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GlobalResponse>call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG, t.toString());
+                if (auth_type==0) {
+                    pDialog.dismiss();
+                    Toast.makeText(getContext(), "Logout gagal, mohon coba kembali", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
