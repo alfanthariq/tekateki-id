@@ -2,12 +2,17 @@ package com.alfanthariq.tekteksil;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -29,9 +34,11 @@ public class NewsActivity extends AppCompatActivity {
 
     private String TAG = "NewsActivity";
     private Toolbar toolbar;
-    private TextView tvJudul, tvTanggal, tvIsi;
+    private TextView tvJudul, tvTanggal;
     private ProgressBar progBar;
-    private ScrollView scrollView;
+    //private ScrollView scrollView;
+    private ImageView ivPic;
+    private WebView wvContent;
 
     // API
     private ApiInterface api;
@@ -55,14 +62,21 @@ public class NewsActivity extends AppCompatActivity {
         );
 
         tvJudul = (TextView) findViewById(R.id.tvJudul);
-        tvIsi = (TextView) findViewById(R.id.tvIsi);
         tvTanggal = (TextView) findViewById(R.id.tvTanggal);
-        scrollView = (ScrollView) findViewById(R.id.scroll);
+        wvContent = (WebView) findViewById(R.id.wvContent);
+        ivPic = (ImageView) findViewById(R.id.ivPic);
         Intent intent = getIntent();
         int id = intent.getIntExtra("id", 0);
+        String img64 = intent.getStringExtra("img64");
         tvJudul.setText(intent.getStringExtra("judul"));
         tvTanggal.setText(intent.getStringExtra("tanggal"));
         progBar = (ProgressBar) findViewById(R.id.progress_bar_news);
+        Bitmap decodedImage;
+        if (img64!=null) {
+            byte[] imageBytes = Base64.decode(img64, Base64.DEFAULT);
+            decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            ivPic.setImageBitmap(decodedImage);
+        }
 
         getNewsDetail(id);
     }
@@ -70,10 +84,10 @@ public class NewsActivity extends AppCompatActivity {
     private void initLoading(Boolean visible){
         if(visible) {
             progBar.setVisibility(View.VISIBLE);
-            scrollView.setVisibility(View.GONE);
+            wvContent.setVisibility(View.GONE);
         } else {
             progBar.setVisibility(View.GONE);
-            scrollView.setVisibility(View.VISIBLE);
+            wvContent.setVisibility(View.VISIBLE);
         }
     }
 
@@ -112,7 +126,12 @@ public class NewsActivity extends AppCompatActivity {
                 List<NewsData> data = response.body().getData();
                 for (int i = 0; i < data.size(); i++) {
                     String isi = data.get(i).getIsi();
-                    tvIsi.setText(isi);
+                    //tvIsi.setText(isi);
+                    wvContent.getSettings().setJavaScriptEnabled(false);
+                    wvContent.getSettings().setBuiltInZoomControls(false);
+                    wvContent.setInitialScale(1);
+                    wvContent.getSettings().setUseWideViewPort(true);
+                    wvContent.loadData(isi, "text/html", "UTF-8");
                 }
                 initLoading(false);
             }

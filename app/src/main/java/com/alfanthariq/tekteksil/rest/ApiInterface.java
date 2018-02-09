@@ -43,6 +43,9 @@ public interface ApiInterface {
     @GET("news/{id}")
     Call<NewsDataResponse> getNewsByID(@Path("id") int id);
 
+    @GET("submit_status/{id}")
+    Call<GlobalResponse> getSubmitStatus(@Path("id") int id);
+
     @FormUrlEncoded
     @POST("login/")
     Call<LoginResponse> login(@Field("auth_type") int auth_type, @Field("email") String email,
@@ -68,6 +71,15 @@ public interface ApiInterface {
     @POST("forgot/")
     Call<GlobalResponse> send_forgot(@Field("email") String email,
                                      @Field("new_pwd") String password_hash);
+
+    @FormUrlEncoded
+    @POST("update_profile/")
+    Call<GlobalResponse> update_profile(@Field("email") String email, @Field("full_name") String full_name,
+                                        @Field("img64") String img64, @Field("id_kabkota") int id_kabkota);
+
+    @FormUrlEncoded
+    @POST("check_notif/")
+    Call<GlobalResponse> checkNotif(@Field("android_id") String android_id);
 
     Retrofit retrofit =
             new Retrofit.Builder()

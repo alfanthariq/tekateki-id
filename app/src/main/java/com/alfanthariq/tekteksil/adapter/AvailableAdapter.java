@@ -78,9 +78,6 @@ public class AvailableAdapter extends CursorAdapter {
                 Integer pos = (Integer) view.getTag();
                 cursor.moveToPosition(pos);
                 //Toast.makeText(context, cursor.getString(cursor.getColumnIndexOrThrow("edition_str")), Toast.LENGTH_SHORT).show();
-                //downloadFileTTS(cursor.getString(cursor.getColumnIndexOrThrow("db_name")),
-                        //context,
-                        //cursor.getInt(cursor.getColumnIndexOrThrow("_id")));
                 String pathName = context.getFilesDir().getAbsolutePath()+File.separator+"tts"+File.separator;
                 File file = new File(pathName);
                 String fileName = cursor.getString(cursor.getColumnIndexOrThrow("db_name"));

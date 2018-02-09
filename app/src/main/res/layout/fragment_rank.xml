@@ -34,8 +34,8 @@
                 android:textColor="@color/colorAccent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="15sp"
-                android:text="Gagal mengambil data ranking"/>
+                android:textSize="13sp"
+                android:text="@string/empty_text"/>
         </LinearLayout>
     </FrameLayout>
 

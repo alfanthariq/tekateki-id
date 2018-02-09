@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.alfanthariq.tekteksil.WelcomeActivity"
+    android:background="@color/colorPrimaryDark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            fontPath="fonts/Poppins-SemiBold.ttf"
+            tools:ignore="MissingPrefix"
+            android:textSize="30sp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="horizontal"
+        android:padding="20dp">
+
+        <pl.droidsonroids.gif.GifImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:src="@drawable/tts_char" />
+
+        <ScrollView
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Game teka-teki silang Indonesia"
+                    android:textSize="20sp"
+                    android:id="@+id/tvTitleTTS"
+                    fontPath="fonts/Poppins-Regular.ttf"
+                    tools:ignore="MissingPrefix"
+                    android:layout_marginBottom="20dp"/>
+
+                <TextView
+                    android:id="@+id/tvTTSWiki"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tts_wiki"
+                    android:layout_below="@+id/tvTitleTTS"
+                    fontPath="fonts/Poppins-Light.ttf"
+                    tools:ignore="MissingPrefix"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Wikipedia"
+                    android:layout_below="@+id/tvTTSWiki"
+                    android:layout_marginTop="10dp"
+                    android:textAlignment="textEnd"
+                    fontPath="fonts/Poppins-Light.ttf"
+                    tools:ignore="MissingPrefix"
+                    android:textSize="12sp"
+                    android:gravity="end" />
+            </RelativeLayout>
+        </ScrollView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/card_bg_selector"
+            android:text="@string/mulai_main"
+            android:gravity="center_horizontal|center_vertical"
+            android:textSize="15sp"
+            fontPath="fonts/Poppins-SemiBold.ttf"
+            tools:ignore="MissingPrefix"
+            android:id="@+id/btnStart"
+            android:textAllCaps="false"
+            android:layout_marginBottom="20dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/card_bg_selector"
+            android:text="@string/login_start"
+            android:gravity="center_horizontal|center_vertical"
+            android:textSize="15sp"
+            fontPath="fonts/Poppins-SemiBold.ttf"
+            tools:ignore="MissingPrefix"
+            android:id="@+id/btnLogin"
+            android:textAllCaps="false"
+            android:layout_marginBottom="2dp"/>
+    </LinearLayout>
+</LinearLayout>

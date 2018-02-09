@@ -59,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     private TextView txtReg, txtForgot;
+    private int openFrom;
 
     // API
     private ApiInterface api;
@@ -103,6 +104,9 @@ public class LoginActivity extends AppCompatActivity {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+
+        Intent intent = getIntent();
+        openFrom = intent.getIntExtra("openFrom", 0);
 
         inputLayoutEmail = (TextInputLayout) findViewById(R.id.input_layout_email);
         inputLayoutPassword = (TextInputLayout) findViewById(R.id.input_layout_password);
@@ -171,7 +175,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+        if (openFrom!=1) {
+            overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+        }
     }
 
     @Override
@@ -183,7 +189,9 @@ public class LoginActivity extends AppCompatActivity {
 
         if (id == android.R.id.home) {
             finish();
-            overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+            if (openFrom!=1) {
+                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -230,6 +238,9 @@ public class LoginActivity extends AppCompatActivity {
                                     int id_kabkota = data.get(i).getId_kabkota();
                                     String user_id = data.get(i).getUser_id();
                                     String full_name = data.get(i).getFull_name();
+                                    String kota = data.get(i).getKota();
+                                    String prov = data.get(i).getProv();
+                                    String img64 = data.get(i).getImg64();
 
                                     editor = pref.edit();
                                     editor.putString("email", email);
@@ -237,6 +248,8 @@ public class LoginActivity extends AppCompatActivity {
                                     editor.putInt("id_kabkota", id_kabkota);
                                     editor.putString("full_name", full_name);
                                     editor.putInt("auth_type", 0);
+                                    editor.putString("lokasi", kota+", "+prov);
+                                    editor.putString("img64", img64);
                                     editor.apply();
                                     pDialog.dismiss();
                                     Toast.makeText(LoginActivity.this, "Login berhasil", Toast.LENGTH_SHORT).show();
@@ -361,6 +374,8 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putInt("id_kabkota", 99);
                             editor.putString("full_name", full_name);
                             editor.putInt("auth_type", 1);
+                            editor.putString("lokasi", "Indonesia");
+                            editor.putString("img64", "");
                             editor.apply();
                             Login(1, email, id, "", full_name);
                         } catch (JSONException e) {

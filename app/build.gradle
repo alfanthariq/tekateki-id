@@ -19,15 +19,13 @@ android {
 }
 
 dependencies {
+    //noinspection GradleCompatible
     implementation 'com.android.support:support-v4:26.1.0'
     repositories {
         mavenCentral()
         jcenter()
         maven {
             url "https://maven.google.com"
-        }
-        maven() {
-            url "https://oss.sonatype.org/content/repositories/snapshots"
         }
     }
 
@@ -45,7 +43,7 @@ dependencies {
     implementation 'com.mikepenz:fontawesome-typeface:4.7.0.2@aar'
     compile 'com.aurelhubert:ahbottomnavigation:2.1.0'
     compile 'cyd.awesome.android:awesome-material:1.0'
-    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
@@ -54,7 +52,7 @@ dependencies {
     implementation 'com.facebook.android:facebook-share:4.28.0'
 
     compile 'com.google.android.gms:play-services-ads:11.8.0'
-    compile('com.github.worker8:tourguide:1.0.18-SNAPSHOT@aar') {
-        transitive = true
-    }
+    compile 'de.hdodenhof:circleimageview:2.2.0'
+    compile 'com.getkeepsafe.taptargetview:taptargetview:1.11.0'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.10'
 }

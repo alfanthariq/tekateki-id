@@ -2,6 +2,9 @@ package com.alfanthariq.tekteksil.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,8 @@ import com.alfanthariq.tekteksil.R;
 import com.alfanthariq.tekteksil.model.RankingObject;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by alfanthariq on 30/01/2018.
@@ -55,6 +60,7 @@ public class RankingAdapter extends BaseAdapter {
         TextView nama = (TextView) convertView.findViewById(R.id.tvNama);
         TextView daerah = (TextView) convertView.findViewById(R.id.tvDaerah);
         TextView skor = (TextView) convertView.findViewById(R.id.tvSkor);
+        CircleImageView ivFoto = (CircleImageView) convertView.findViewById(R.id.ivFoto);
 
         // getting movie data for the row
         RankingObject m = rankItems.get(position);
@@ -63,6 +69,15 @@ public class RankingAdapter extends BaseAdapter {
         nama.setText(m.getFull_name());
         daerah.setText(m.getKota()+", "+m.getProv());
         skor.setText(Integer.toString(m.getTotal_skor()));
+        String img64 = m.getImg64();
+        Bitmap decodedImage;
+        if (img64!=null && !img64.equals("")) {
+            byte[] imageBytes = Base64.decode(img64, Base64.DEFAULT);
+            decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            ivFoto.setImageBitmap(decodedImage);
+        } else {
+            ivFoto.setImageDrawable(activity.getResources().getDrawable(R.drawable.user_default));
+        }
 
         return convertView;
     }

@@ -86,7 +86,7 @@ public class DownloadedAdapter extends CursorAdapter {
                     intent.putExtra("dbname", fileName);
                     intent.putExtra("ed_str", ed_str);
                     intent.putExtra("id_tts", Integer.toString(id));
-                    intent.putExtra("is_sent", Integer.toString(isSent));
+                    intent.putExtra("is_sent", isSent);
                     ctx.startActivity(intent);
                     act.overridePendingTransition(R.anim.enter, R.anim.exit);
                 } else {

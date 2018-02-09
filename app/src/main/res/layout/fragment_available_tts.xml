@@ -35,8 +35,8 @@
                 android:textColor="@color/colorAccent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="15sp"
-                android:text="Tidak ada TTS yang terbaru"/>
+                android:textSize="13sp"
+                android:text="@string/empty_text"/>
         </LinearLayout>
 
     </FrameLayout>

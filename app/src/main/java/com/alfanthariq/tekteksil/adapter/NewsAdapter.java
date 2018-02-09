@@ -63,23 +63,18 @@ public class NewsAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.news_list, null);
 
         TextView judul = (TextView) convertView.findViewById(R.id.tvJudul);
-        TextView prev_isi = (TextView) convertView.findViewById(R.id.tvPreview);
         ImageView foto = (ImageView) convertView.findViewById(R.id.ivFoto);
 
         // getting movie data for the row
         NewsObject m = newsItems.get(position);
         judul.setText(m.getJudul());
-        prev_isi.setText(m.getCtn());
         String base64img = m.getImg64();
         Bitmap decodedImage;
         if (base64img!=null) {
             byte[] imageBytes = Base64.decode(base64img, Base64.DEFAULT);
             decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-        } else {
-            byte[] imageBytes = Base64.decode(activity.getResources().getString(R.string.base64), Base64.DEFAULT);
-            decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            foto.setImageBitmap(decodedImage);
         }
-        foto.setImageBitmap(decodedImage);
         return convertView;
     }
 }

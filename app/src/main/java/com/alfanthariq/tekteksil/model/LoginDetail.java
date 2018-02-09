@@ -23,9 +23,16 @@ public class LoginDetail {
     private int is_activate;
     @SerializedName("confirm_key")
     private String confirm_key;
+    @SerializedName("kota")
+    private String kota;
+    @SerializedName("prov")
+    private String prov;
+    @SerializedName("img64")
+    private String img64;
 
     public LoginDetail(int auth_type, String email, String password_hash, String user_id,
-                       String full_name, int id_kabkota, int is_activate,String confirm_key) {
+                       String full_name, int id_kabkota, int is_activate,String confirm_key,
+                       String kota, String prov, String img64) {
         this.auth_type = auth_type;
         this.email = email;
         this.password_hash = password_hash;
@@ -34,6 +41,9 @@ public class LoginDetail {
         this.id_kabkota = id_kabkota;
         this.is_activate = is_activate;
         this.confirm_key = confirm_key;
+        this.kota = kota;
+        this.prov = prov;
+        this.img64 = img64;
     }
 
     public int getAuth_type() {
@@ -66,5 +76,17 @@ public class LoginDetail {
 
     public String getConfirm_key() {
         return confirm_key;
+    }
+
+    public String getKota() {
+        return kota;
+    }
+
+    public String getProv() {
+        return prov;
+    }
+
+    public String getImg64() {
+        return img64;
     }
 }

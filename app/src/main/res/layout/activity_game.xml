@@ -17,8 +17,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.alfanthariq.tekteksil.GameActivity"
     android:background="@color/colorPrimary"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true">
+    android:descendantFocusability="beforeDescendants">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -52,7 +51,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/gameContainer"
+            android:orientation="vertical"
             >
+            <com.google.android.gms.ads.AdView
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/adView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                ads:adSize="SMART_BANNER"
+                ads:adUnitId="@string/unit_id_admob">
+            </com.google.android.gms.ads.AdView>
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -68,7 +78,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
-                        android:background="@android:color/black">
+                        android:background="@android:color/black"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true">
 
                     </GridLayout>
                 </HorizontalScrollView>
@@ -88,7 +100,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="5dp">
 
             <TextView
                 android:id="@+id/txtQuestion"
@@ -103,8 +116,10 @@
 
             <Button
                 android:id="@+id/btnOrientation"
-                android:layout_width="70dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:background="@drawable/card_bg_selector"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
                 android:textSize="10dp"
                 android:text="Toggle"/>
         </LinearLayout>

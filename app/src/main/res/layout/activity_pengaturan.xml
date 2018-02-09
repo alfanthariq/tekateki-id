@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:focusableInTouchMode="true"
+    tools:context="com.alfanthariq.tekteksil.PengaturanActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_pengaturan"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:id="@+id/toolbar_title" />
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scroll">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:background="@color/colorPrimary"
+                android:elevation="10dp"
+                android:id="@+id/linLayoutProfil">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/profile_image"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:layout_gravity="center_horizontal"
+                    app:civ_border_width="5dp"
+                    android:src="@drawable/user_default"
+                    app:civ_border_color="@color/colorAccent"
+                    android:foreground="@drawable/round_image_selector"
+                    android:layout_marginBottom="5dp"
+                    android:clickable="true"/>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/unlogin_name"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:theme="@style/EditTextTheme"
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/etNama"
+                    android:layout_marginBottom="3dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="kidung@gmail.com"
+                    android:textSize="14sp"
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/tvEmail"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/linLayoutLoc"
+                    android:layout_marginBottom="5dp"
+                    android:layout_gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Surakarta, Yogyakarta"
+                        android:textSize="14sp"
+                        android:layout_marginLeft="13dp"
+                        android:layout_gravity="center_horizontal"
+                        android:id="@+id/tvLocation"/>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:src="@drawable/edit"
+                        android:tint="@color/colorAccent"
+                        android:id="@+id/ivEditLoc"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <Switch
+                    android:id="@+id/swAutoNotif"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/auto_notif"
+                    android:gravity="left|center_vertical"
+                    android:layout_marginTop="10dp"
+                    android:theme="@style/EditTextTheme"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="15dp">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/tvText"
+                        android:background="@color/md_grey_500"
+                        />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/tvText"
+                        android:background="@color/md_grey_500"
+                        />
+                </RelativeLayout>
+
+                <Switch
+                    android:id="@+id/swNightMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dark_mode"
+                    android:theme="@style/EditTextTheme"
+                    android:layout_marginTop="15dp"
+                    android:gravity="left|center_vertical"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

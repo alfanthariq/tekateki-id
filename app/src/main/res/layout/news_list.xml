@@ -9,8 +9,7 @@
     android:paddingBottom="7dp"
     android:background="@drawable/card_bg_selector"
     android:descendantFocusability="afterDescendants"
-    android:gravity="center"
-    android:elevation="5dp">
+    android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,6 +30,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:scaleType="fitXY"
+                android:src="@drawable/bg_news"
                 android:id="@+id/ivFoto"/>
         </LinearLayout>
 
@@ -53,14 +53,5 @@
             android:textSize="15sp"
             android:text="Judul"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TextView
-            android:id="@+id/tvPreview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="false"
-            android:textSize="10sp"
-            android:text="Preview isi"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 </LinearLayout>

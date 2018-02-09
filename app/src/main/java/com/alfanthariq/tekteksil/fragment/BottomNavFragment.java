@@ -16,9 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -27,8 +27,8 @@ import android.widget.Toast;
 
 import com.alfanthariq.tekteksil.LoginActivity;
 import com.alfanthariq.tekteksil.NewsActivity;
+import com.alfanthariq.tekteksil.PengaturanActivity;
 import com.alfanthariq.tekteksil.R;
-import com.alfanthariq.tekteksil.RegistrasiActivity;
 import com.alfanthariq.tekteksil.adapter.AvailableAdapter;
 import com.alfanthariq.tekteksil.adapter.DownloadedAdapter;
 import com.alfanthariq.tekteksil.adapter.NewsAdapter;
@@ -51,7 +51,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +86,8 @@ public class BottomNavFragment extends Fragment {
     private RankingAdapter rankAdapter = null;
     private NewsAdapter newsAdapter = null;
     private View footer;
+    private Button btnPengaturan, btnRule, btnCaraMain, btnRiwayat,
+                    btnVersi, btnContact, btnShare, btnRate;
 
     // API
     ApiInterface api;
@@ -194,17 +195,6 @@ public class BottomNavFragment extends Fragment {
 
     private void getPrefs() {
         pref = getContext().getSharedPreferences("tekteksil_user", MODE_PRIVATE);
-    }
-
-    private void initSetting(View view) {
-        txtLogin = view.findViewById(R.id.txtSign);
-        txtFullName = view.findViewById(R.id.txtFullName);
-        txtEmail = view.findViewById(R.id.txtEmail);
-        txtFacebook = view.findViewById(R.id.txtFBConnect);
-        fragmentContainer = view.findViewById(R.id.frameBg);
-        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
-
-        updateInfo();
     }
 
     private void initRank(View view) {
@@ -322,12 +312,43 @@ public class BottomNavFragment extends Fragment {
                 intent.putExtra("id", newsList.get(i).getId());
                 intent.putExtra("judul", newsList.get(i).getJudul());
                 intent.putExtra("tanggal", newsList.get(i).getPublish_date());
+                intent.putExtra("img64", newsList.get(i).getImg64());
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
             }
         });
 
         getNewsPaging(last_idx_news);
+    }
+
+    private void initSetting(View view) {
+        txtLogin = view.findViewById(R.id.txtSign);
+        txtFullName = view.findViewById(R.id.txtFullName);
+        txtEmail = view.findViewById(R.id.txtEmail);
+        txtFacebook = view.findViewById(R.id.txtFBConnect);
+        fragmentContainer = view.findViewById(R.id.frameBg);
+
+        btnPengaturan = view.findViewById(R.id.btnPengaturan);
+        btnRule = view.findViewById(R.id.btnRule);
+        btnCaraMain = view.findViewById(R.id.btnCaraMain);
+        btnRiwayat = view.findViewById(R.id.btnRiwayat);
+        btnVersi = view.findViewById(R.id.btnVersi);
+        btnContact = view.findViewById(R.id.btnContact);
+        btnShare = view.findViewById(R.id.btnShare);
+        btnRate = view.findViewById(R.id.btnRate);
+
+        btnPengaturan.setOnClickListener(new MyButtonClick());
+        btnRule.setOnClickListener(new MyButtonClick());
+        btnCaraMain.setOnClickListener(new MyButtonClick());
+        btnRiwayat.setOnClickListener(new MyButtonClick());
+        btnVersi.setOnClickListener(new MyButtonClick());
+        btnContact.setOnClickListener(new MyButtonClick());
+        btnShare.setOnClickListener(new MyButtonClick());
+        btnRate.setOnClickListener(new MyButtonClick());
+
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+
+        updateInfo();
     }
 
     public void updateInfo(){
@@ -360,14 +381,6 @@ public class BottomNavFragment extends Fragment {
                     } else {
                         logout(0);
                     }
-                    editor = pref.edit();
-                    editor.remove("email");
-                    editor.remove("user_id");
-                    editor.remove("id_kabkota");
-                    editor.remove("full_name");
-                    editor.remove("auth_type");
-                    editor.apply();
-                    updateInfo();
                 }
             });
         } else {
@@ -383,6 +396,34 @@ public class BottomNavFragment extends Fragment {
                     getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
                 }
             });
+        }
+    }
+
+    public class MyButtonClick implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.btnPengaturan:
+                    Intent intent = new Intent(getContext(), PengaturanActivity.class);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
+                    break;
+                case R.id.btnRule:
+                    break;
+                case R.id.btnCaraMain:
+                    break;
+                case R.id.btnRiwayat:
+                    break;
+                case R.id.btnVersi:
+                    break;
+                case R.id.btnContact:
+                    break;
+                case R.id.btnShare:
+                    break;
+                case R.id.btnRate:
+                    break;
+            }
         }
     }
 
@@ -477,12 +518,12 @@ public class BottomNavFragment extends Fragment {
             public void onResponse(Call<RankingResponse>call, Response<RankingResponse> response) {
                 List<RankingDetail> data = response.body().getData();
                 for (int i = 0; i < data.size(); i++) {
-                    int rank = data.get(i).getRank();
                     int total_skor = data.get(i).getTotal_skor();
                     String nama = data.get(i).getFull_name();
                     String user_id = data.get(i).getUser_id();
                     String kota = data.get(i).getKota();
                     String prov = data.get(i).getProv();
+                    String img64 = data.get(i).getImg64();
 
                     RankingObject ranking = new RankingObject();
                     ranking.setRanking(rankList.size()+1);
@@ -491,6 +532,7 @@ public class BottomNavFragment extends Fragment {
                     ranking.setUser_id(user_id);
                     ranking.setKota(kota);
                     ranking.setProv(prov);
+                    ranking.setImg64(img64);
                     rankList.add(ranking);
                     last_idx_rank += 1;
                 }
@@ -502,8 +544,7 @@ public class BottomNavFragment extends Fragment {
             public void onFailure(Call<RankingResponse>call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
-                swipeRefresh.setRefreshing(true);
-                Toast.makeText(getContext(), "Gagal mengambil data ranking", Toast.LENGTH_SHORT).show();
+                swipeRefresh.setRefreshing(false);
             }
         });
     }
@@ -540,12 +581,11 @@ public class BottomNavFragment extends Fragment {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
                 swipeRefresh.setRefreshing(true);
-                Toast.makeText(getContext(), "Gagal mengambil berita terbaru", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void getAvailableTTS(){
+    public void getAvailableTTS(){
         String tglTerbit = mDbHelper.getLastTglTerbit();
         Call<AvailableTtsResponse> call = api.getAvailableTTS(tglTerbit);
         call.enqueue(new Callback<AvailableTtsResponse>() {
@@ -576,7 +616,6 @@ public class BottomNavFragment extends Fragment {
             public void onFailure(Call<AvailableTtsResponse>call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
-                Toast.makeText(getContext(), "Gagal mendapatkan TTS", Toast.LENGTH_SHORT).show();
                 swipeRefresh.setRefreshing(false);
             }
         });
@@ -605,6 +644,8 @@ public class BottomNavFragment extends Fragment {
                     pDialog.dismiss();
                     Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                 }
+                removeSharedPref();
+                updateInfo();
             }
 
             @Override
@@ -673,4 +714,15 @@ public class BottomNavFragment extends Fragment {
         }).executeAsync();
     }
 
+    private void removeSharedPref(){
+        editor = pref.edit();
+        editor.remove("email");
+        editor.remove("user_id");
+        editor.remove("id_kabkota");
+        editor.remove("full_name");
+        editor.remove("auth_type");
+        editor.remove("lokasi");
+        editor.remove("img64");
+        editor.apply();
+    }
 }

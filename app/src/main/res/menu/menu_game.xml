@@ -18,9 +18,9 @@
         android:title="Cek Jawaban"
         />
     <item
-        android:id="@+id/menu_reset_time"
+        android:id="@+id/menu_guide"
         android:orderInCategory="300"
-        android:title="Reset Timer"
+        android:title="Tampilkan Guide"
         />
     <item
         android:id="@+id/menu_hapus"

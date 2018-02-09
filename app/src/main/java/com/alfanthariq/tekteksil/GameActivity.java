@@ -55,11 +55,18 @@ import com.alfanthariq.tekteksil.helper.GameDataHelper;
 import com.alfanthariq.tekteksil.helper.GameSettingHelper;
 import com.alfanthariq.tekteksil.model.GlobalResponse;
 import com.alfanthariq.tekteksil.rest.ApiInterface;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.gson.Gson;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.File;
@@ -94,7 +101,7 @@ public class GameActivity extends AppCompatActivity
     GameSettingHelper SettingHelper;
     int numOfCol, numOfRow, lastX, lastY,
             orientation, questionIdx, actionBarHeight,
-            hours, mins, secs, skor, id_tts, isSent;
+            hours, mins, secs, skor, id_tts, isSent, isSubmitAvailable;
     private TextView txtQuest, title_app;
     private Button btnOrient;
     private LinearLayout gameCont, questionLayout;
@@ -109,17 +116,23 @@ public class GameActivity extends AppCompatActivity
     private long millis, currMillis;
     private boolean isCreate, isLogin;
     private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
+    private TapTargetSequence guide;
+    private Toolbar toolbar;
 
     // API
     private ApiInterface api;
+    //Admob
+    private AdView mAdView;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.inflateMenu(R.menu.menu_game);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -130,6 +143,16 @@ public class GameActivity extends AppCompatActivity
                 .build()
         );
 
+        MobileAds.initialize(this, "ca-app-pub-3323952393155404~9977259115");
+        AdRequest request = new AdRequest.Builder()
+                .addTestDevice("0C7A997C83E80A8B3BFA16B8091B05A3")  // An example device ID
+                .build();
+        if (request.isTestDevice(this)) {
+            mAdView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
+
         getPrefs();
         api = ApiInterface.retrofit.create(ApiInterface.class);
 
@@ -138,8 +161,6 @@ public class GameActivity extends AppCompatActivity
         DBNAME = intent.getStringExtra("dbname");
         title_app.setText(intent.getStringExtra("ed_str"));
         id_tts = Integer.valueOf(intent.getStringExtra("id_tts"));
-                //intent.getIntExtra("id_tts", 0);
-        Toast.makeText(this, "ID TTS : "+Integer.toString(id_tts), Toast.LENGTH_SHORT).show();
         isSent = intent.getIntExtra("is_sent", 0);
         isCreate = true;
         skor = 0;
@@ -186,6 +207,11 @@ public class GameActivity extends AppCompatActivity
         initBoard();
         initSlidePanel();
         initTabLayout();
+        if (!pref.getBoolean("game_guide", false)) {
+            initGuide();
+            guide.start();
+        }
+        getSubmitStatus();
         //startTimer();
     }
 
@@ -240,6 +266,97 @@ public class GameActivity extends AppCompatActivity
                 Toast.makeText(GameActivity.this, "Gagal mengirim skor. Silahkan coba beberapa saat lagi", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void getSubmitStatus(){
+        Call<GlobalResponse> call = api.getSubmitStatus(id_tts);
+        // Set up progress before call
+        call.enqueue(new Callback<GlobalResponse>() {
+            @Override
+            public void onResponse(Call<GlobalResponse>call, Response<GlobalResponse> response) {
+                //Log.e(TAG, new Gson().toJson(response.body()));
+                if (response.body()!=null) {
+                    String message = response.body().getMessage();
+                    Boolean status = response.body().isStatus();
+                    if (status) {
+                        isSubmitAvailable = Integer.valueOf(message);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GlobalResponse>call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG, t.toString());
+            }
+        });
+    }
+
+    private void initGuide(){
+        guide = new TapTargetSequence(this)
+                .targets(
+                        TapTarget.forToolbarMenuItem(toolbar, R.id.timer, "Waktu terpakai", getResources().getString(R.string.desc_timer))
+                                .dimColor(R.color.colorBlack)
+                                .outerCircleColor(R.color.colorAccent)
+                                .targetCircleColor(R.color.colorWhite)
+                                .transparentTarget(true)
+                                .cancelable(false)
+                                .textColor(R.color.colorTextPrimary)
+                                .id(1),
+                        TapTarget.forToolbarMenuItem(toolbar, R.id.menu_submit, "Kirim jawaban", getResources().getString(R.string.desc_timer))
+                                .dimColor(R.color.colorBlack)
+                                .outerCircleColor(R.color.colorAccent)
+                                .targetCircleColor(R.color.colorWhite)
+                                .transparentTarget(true)
+                                .cancelable(false)
+                                .textColor(R.color.colorTextPrimary)
+                                .id(2),
+                        TapTarget.forToolbarOverflow(toolbar, "Menu lainnya", getResources().getString(R.string.desc_menu_more))
+                                .dimColor(R.color.colorBlack)
+                                .outerCircleColor(R.color.colorAccent)
+                                .targetCircleColor(R.color.colorWhite)
+                                .transparentTarget(true)
+                                .cancelable(false)
+                                .textColor(R.color.colorTextPrimary)
+                                .id(3),
+                        TapTarget.forView(txtQuest, "List pertanyaan", getResources().getString(R.string.desc_list_quest))
+                                .dimColor(R.color.colorBlack)
+                                .outerCircleColor(R.color.colorAccent)
+                                .targetCircleColor(R.color.colorWhite)
+                                .transparentTarget(true)
+                                .cancelable(false)
+                                .textColor(R.color.colorTextPrimary)
+                                .id(3),
+                        TapTarget.forView(btnOrient, "Ubah orientasi", getResources().getString(R.string.desc_orientation))
+                                .dimColor(R.color.colorBlack)
+                                .outerCircleColor(R.color.colorAccent)
+                                .targetCircleColor(R.color.colorWhite)
+                                .transparentTarget(true)
+                                .cancelable(false)
+                                .textColor(R.color.colorTextPrimary)
+                                .id(4)
+                )
+                .listener(new TapTargetSequence.Listener() {
+                    // This listener will tell us when interesting(tm) events happen in regards
+                    // to the sequence
+                    @Override
+                    public void onSequenceFinish() {
+                        editor = pref.edit();
+                        editor.putBoolean("game_guide", true);
+                        editor.apply();
+                        Toast.makeText(GameActivity.this, "Selamat, anda sudah siap memulai permainan", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                        // Perfom action for the current target
+                    }
+
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+                        // Boo
+                    }
+                });
     }
 
     private void initTabLayout(){
@@ -612,7 +729,7 @@ public class GameActivity extends AppCompatActivity
         if (!isLogin) {
             menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(getResources().getColor(R.color.colorPrimaryDark)).sizeDp(20));
         } else {
-            if (isSent==0) {
+            if (isSent==0 && isSubmitAvailable!=0) {
                 menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(Color.WHITE).sizeDp(20));
             } else {
                 menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(getResources().getColor(R.color.colorPrimaryDark)).sizeDp(20));
@@ -642,14 +759,9 @@ public class GameActivity extends AppCompatActivity
 
             Toast.makeText(this, Integer.toString(mins)+" menit "+Integer.toString(secs)+" detik telah berlalu. Skor anda akan berkurang "+Integer.toString(minusScore)+" poin", Toast.LENGTH_LONG).show();
             return true;
-        } else if (id == R.id.menu_reset_time) {
-            mDbHelper = new GameDataHelper(this, DBNAME);
-            try {
-                mDbHelper.updateSetting(0,  99);
-                millis = 0;
-            } finally {
-                mDbHelper.close();
-            }
+        } else if (id == R.id.menu_guide) {
+            initGuide();
+            guide.start();
             return true;
         } else if (id == R.id.menu_cek_jawaban) {
             cekJawaban();
@@ -658,6 +770,8 @@ public class GameActivity extends AppCompatActivity
             if (isLogin) {
                 if (isSent==1) {
                     Toast.makeText(this, "Skor anda sudah dikirim", Toast.LENGTH_SHORT).show();
+                } else if (isSubmitAvailable==0) {
+                    Toast.makeText(this, "Pengiriman jawaban untuk TTS ini sudah di tutup", Toast.LENGTH_SHORT).show();
                 } else {
                     new AlertDialog.Builder(this)
                             .setTitle("Mengirim jawaban sekarang ?")

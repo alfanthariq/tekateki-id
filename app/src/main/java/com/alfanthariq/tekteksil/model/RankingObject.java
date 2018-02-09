@@ -6,7 +6,7 @@ package com.alfanthariq.tekteksil.model;
 
 public class RankingObject {
     private int ranking, total_skor;
-    private String user_id, full_name, kota, prov;
+    private String user_id, full_name, kota, prov, img64;
 
     public RankingObject(){
 
@@ -58,5 +58,13 @@ public class RankingObject {
 
     public void setProv(String prov) {
         this.prov = prov;
+    }
+
+    public String getImg64() {
+        return img64;
+    }
+
+    public void setImg64(String img64) {
+        this.img64 = img64;
     }
 }

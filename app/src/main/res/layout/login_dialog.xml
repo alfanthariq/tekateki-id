@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_prov"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/TextLabel">
+            <Spinner
+                style="@android:style/Widget.Spinner"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/spin_provinsi"
+                android:background="@drawable/edittext_top_bg"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_kabkota"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/TextLabel">
+            <Spinner
+                style="@android:style/Widget.Spinner"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/spin_kabkota"
+                android:background="@drawable/edittext_default_bg"
+                />
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <View android:id="@+id/strut"
+            android:layout_width="2dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/colorPrimary"/>
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_marginRight="2dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_dialog_left"
+            android:text="Cancel"
+            android:textColor="@color/colorWhite"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_alignParentLeft="true"
+            android:layout_alignRight="@id/strut"
+            />
+
+        <Button
+            android:id="@+id/btnSet"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_dialog_right"
+            android:text="Set"
+            android:textColor="@color/colorWhite"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_alignParentRight="true"
+            android:layout_alignLeft="@id/strut"
+            />
+    </RelativeLayout>
+</LinearLayout>

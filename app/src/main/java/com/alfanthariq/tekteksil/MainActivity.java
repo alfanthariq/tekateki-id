@@ -4,8 +4,10 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -15,16 +17,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.widget.Toast;
 
 import com.alfanthariq.tekteksil.adapter.BottomNavAdapter;
 import com.alfanthariq.tekteksil.fragment.BottomNavFragment;
 import com.alfanthariq.tekteksil.helper.GameSettingHelper;
+import com.alfanthariq.tekteksil.services.NotifService;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationViewPager;
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -46,10 +53,13 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<AHBottomNavigationItem> bottomNavigationItems = new ArrayList<>();
     private Handler handler = new Handler();
     private GameSettingHelper mDbHelper;
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
 
     // UI
     private AHBottomNavigationViewPager viewPager;
     private AHBottomNavigation bottomNavigation;
+    private TapTargetSequence guide;
 
     private static final int REQUEST = 112;
 
@@ -100,7 +110,22 @@ public class MainActivity extends AppCompatActivity {
         if (!projDir.exists())
             projDir.mkdirs();
 
+        getPrefs();
         initUI();
+        if (!pref.getBoolean("main_guide", false)) {
+            initGuide();
+            guide.start();
+        }
+
+        Intent intent = getIntent();
+        Boolean ref = intent.getBooleanExtra("auto_refresh", false);
+        if (ref) {
+            currentFragment.getAvailableTTS();
+        }
+    }
+
+    private void getPrefs() {
+        pref = getApplicationContext().getSharedPreferences("tekteksil_user", MODE_PRIVATE);
     }
 
     @Override
@@ -213,14 +238,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-		/*
-		bottomNavigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
-			@Override public void onPositionChange(int y) {
-				Log.d("DemoActivity", "BottomNavigation Position: " + y);
-			}
-		});
-		*/
-
         viewPager.setOffscreenPageLimit(4);
         adapter = new BottomNavAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
@@ -239,8 +256,87 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigation.setNotification(notification, 1);
             }
         }, 3000);
+    }
 
-        //bottomNavigation.setDefaultBackgroundResource(R.drawable.bottom_navigation_background);
+    private void initGuide(){
+        final Display display = getWindowManager().getDefaultDisplay();
+        int menuWidth = display.getWidth()/5;
+        int targetLeft = menuWidth - (menuWidth/2) - 30;
+        int targetRight = menuWidth - 30;
+        final Rect targetRect1 = new Rect( targetLeft * 1, display.getHeight()-60, targetRight * 1, display.getHeight());
+        final Rect targetRect2 = new Rect( targetLeft + (menuWidth * 1), display.getHeight()-60, targetRight + (menuWidth * 1), display.getHeight());
+        final Rect targetRect3 = new Rect( targetLeft + (menuWidth * 2), display.getHeight()-60, targetRight + (menuWidth * 2), display.getHeight());
+        final Rect targetRect4 = new Rect( targetLeft + (menuWidth * 3), display.getHeight()-60, targetRight + (menuWidth * 3), display.getHeight());
+        final Rect targetRect5 = new Rect( targetLeft + (menuWidth * 4), display.getHeight()-60, targetRight + (menuWidth * 4), display.getHeight());
+
+        guide = new TapTargetSequence(this)
+                .targets(
+                        TapTarget.forBounds(targetRect1, "TTS tersedia", getResources().getString(R.string.desc_available))
+                                .outerCircleColor(R.color.colorAccent)
+                                .targetCircleColor(R.color.colorWhite)
+                                .textColor(R.color.colorTextPrimary)
+                                .dimColor(R.color.colorBlack)
+                                .drawShadow(true)
+                                .cancelable(false)
+                                .transparentTarget(true)
+                                .id(1),
+                        TapTarget.forBounds(targetRect2, "TTS terunduh", getResources().getString(R.string.desc_unduh))
+                                .outerCircleColor(R.color.colorAccent)
+                                .targetCircleColor(R.color.colorWhite)
+                                .textColor(R.color.colorTextPrimary)
+                                .dimColor(R.color.colorBlack)
+                                .drawShadow(true)
+                                .cancelable(false)
+                                .transparentTarget(true)
+                                .id(2),
+                        TapTarget.forBounds(targetRect3, "Ranking", getResources().getString(R.string.desc_rank))
+                                .outerCircleColor(R.color.colorAccent)
+                                .targetCircleColor(R.color.colorWhite)
+                                .textColor(R.color.colorTextPrimary)
+                                .dimColor(R.color.colorBlack)
+                                .drawShadow(true)
+                                .cancelable(false)
+                                .transparentTarget(true)
+                                .id(3),
+                        TapTarget.forBounds(targetRect4, "Berita", getResources().getString(R.string.desc_news))
+                                .outerCircleColor(R.color.colorAccent)
+                                .targetCircleColor(R.color.colorWhite)
+                                .textColor(R.color.colorTextPrimary)
+                                .dimColor(R.color.colorBlack)
+                                .drawShadow(true)
+                                .cancelable(false)
+                                .transparentTarget(true)
+                                .id(4),
+                        TapTarget.forBounds(targetRect5, "Lainnya", getResources().getString(R.string.desc_other))
+                                .outerCircleColor(R.color.colorAccent)
+                                .targetCircleColor(R.color.colorWhite)
+                                .textColor(R.color.colorTextPrimary)
+                                .dimColor(R.color.colorBlack)
+                                .drawShadow(true)
+                                .cancelable(false)
+                                .transparentTarget(true)
+                                .id(5)
+                )
+                .listener(new TapTargetSequence.Listener() {
+                    // This listener will tell us when interesting(tm) events happen in regards
+                    // to the sequence
+                    @Override
+                    public void onSequenceFinish() {
+                        editor = pref.edit();
+                        editor.putBoolean("main_guide", true);
+                        editor.apply();
+                    }
+
+                    @Override
+                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+
+                    }
+
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+
+                    }
+                });
     }
 
     /**
