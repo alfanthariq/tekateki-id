@@ -34,4 +34,11 @@
     <dimen name="full_name">17dp</dimen>
     <dimen name="daerah">15dip</dimen>
     <dimen name="skor">13dip</dimen>
+
+    <dimen name="obj_width">80dp</dimen>
+    <dimen name="obj_height">80dp</dimen>
+    <dimen name="nomor_padding_left">30dp</dimen>
+    <dimen name="nomor_padding_top">5dp</dimen>
+    <dimen name="nomor_padding_right">5dp</dimen>
+    <dimen name="nomor_padding_bottom">5dp</dimen>
 </resources>

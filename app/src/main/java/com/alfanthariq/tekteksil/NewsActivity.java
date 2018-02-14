@@ -8,13 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +45,7 @@ public class NewsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
 
         api = ApiInterface.retrofit.create(ApiInterface.class);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -139,7 +138,6 @@ public class NewsActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<NewsDataResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
                 initLoading(false);
                 Toast.makeText(NewsActivity.this, "Gagal mengambil detail berita", Toast.LENGTH_SHORT).show();
             }

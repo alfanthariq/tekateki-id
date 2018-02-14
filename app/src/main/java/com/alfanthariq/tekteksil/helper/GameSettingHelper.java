@@ -6,14 +6,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.util.Log;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by alfanthariq on 13/01/2018.
@@ -40,14 +34,13 @@ public class GameSettingHelper extends SQLiteAssetHelper {
             String sqlTables = "available_tts";
             qb.setTables(sqlTables);
             Cursor c = qb.query(db, null, "is_downloaded = ?", new String[] {Integer.toString(0)},
-                    null, null, null);
+                    null, null, "tgl_terbit DESC");
             c.moveToFirst();
             db.close();
             return c;
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "getAvailable >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -68,7 +61,6 @@ public class GameSettingHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "getAvailable >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -95,7 +87,6 @@ public class GameSettingHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "getAvailable >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -117,7 +108,6 @@ public class GameSettingHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "addAvailableTTS >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -132,7 +122,6 @@ public class GameSettingHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "deleteTTS >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -149,7 +138,6 @@ public class GameSettingHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "setKirim >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -166,7 +154,6 @@ public class GameSettingHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "setDownloaded >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -184,7 +171,6 @@ public class GameSettingHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "addProvinsi >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -205,7 +191,6 @@ public class GameSettingHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "getProvinsi >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -224,7 +209,6 @@ public class GameSettingHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "addKabkota >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -245,7 +229,6 @@ public class GameSettingHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "getKabkota >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -267,7 +250,6 @@ public class GameSettingHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "getProvCount >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -282,7 +264,6 @@ public class GameSettingHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "clearKabkota >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }

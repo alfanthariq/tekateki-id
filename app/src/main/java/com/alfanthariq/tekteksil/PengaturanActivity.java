@@ -1,16 +1,15 @@
 package com.alfanthariq.tekteksil;
 
 import android.app.ActivityManager;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -21,13 +20,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -50,12 +46,12 @@ import com.alfanthariq.tekteksil.services.NotifService;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -76,7 +72,7 @@ public class PengaturanActivity extends AppCompatActivity {
     private CircleImageView ivFoto;
     private ImageView ivEditLoc;
     private LinearLayout linLayLoc;
-    private Switch swAutoNotif, swDarkMode;
+    private Switch swAutoNotif, swTrivia;
     public static final int PICK_IMAGE = 1;
     private GameSettingHelper mDbHelper;
     private Cursor kabkota, provCursor;
@@ -92,6 +88,7 @@ public class PengaturanActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pengaturan);
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -111,7 +108,7 @@ public class PengaturanActivity extends AppCompatActivity {
         etNama = (EditText) findViewById(R.id.etNama);
         ivFoto = (CircleImageView) findViewById(R.id.profile_image);
         swAutoNotif = (Switch) findViewById(R.id.swAutoNotif);
-        swDarkMode = (Switch) findViewById(R.id.swNightMode);
+        swTrivia = (Switch) findViewById(R.id.swTrivia);
         ivEditLoc = (ImageView) findViewById(R.id.ivEditLoc);
 
         etNama.addTextChangedListener(new MyTextWatcher(etNama));
@@ -128,6 +125,19 @@ public class PengaturanActivity extends AppCompatActivity {
                 } else {
                     stopService(new Intent(PengaturanActivity.this, NotifService.class));
                 }
+                editor = pref.edit();
+                editor.putBoolean("push_notif", b);
+                editor.apply();
+            }
+        });
+
+        swTrivia.setChecked(pref.getBoolean("showTrivia", true));
+        swTrivia.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                editor = pref.edit();
+                editor.putBoolean("showTrivia", b);
+                editor.apply();
             }
         });
 
@@ -293,7 +303,6 @@ public class PengaturanActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ProvinsiResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
             }
         });
     }
@@ -320,7 +329,6 @@ public class PengaturanActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<KabkotaResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
             }
         });
     }
@@ -335,15 +343,13 @@ public class PengaturanActivity extends AppCompatActivity {
                     Uri uri = data.getData();
                     // get bitmap from uri
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    ivFoto.setImageBitmap(bitmap);
-                    // store bitmap to file
-                    File filename = new File(Environment.getExternalStorageDirectory(), "temp.jpg");
-                    FileOutputStream out = new FileOutputStream(filename);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 60, out);
-                    out.flush();
-                    out.close();
+                    Bitmap resBitmap = getResizedBitmap(bitmap, 200,200);
+                    ivFoto.setImageBitmap(resBitmap);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    resBitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+                    byte[] b = baos.toByteArray();
                     // get base64 string from file
-                    base64Image = getStringImage(filename);
+                    base64Image = Base64.encodeToString(b, Base64.DEFAULT);
                     showMenu(true);
                 }
             } catch (FileNotFoundException e) {
@@ -354,17 +360,21 @@ public class PengaturanActivity extends AppCompatActivity {
         }
     }
 
-    private String getStringImage(File file){
-        try {
-            FileInputStream fin = new FileInputStream(file);
-            byte[] imageBytes = new byte[(int)file.length()];
-            fin.read(imageBytes, 0, imageBytes.length);
-            fin.close();
-            return Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        } catch (Exception ex) {
-            Log.e(TAG, Log.getStackTraceString(ex));
-        }
-        return null;
+    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        bm.recycle();
+        return resizedBitmap;
     }
 
     private void getPrefs() {
@@ -418,7 +428,6 @@ public class PengaturanActivity extends AppCompatActivity {
         String email = pref.getString("email", "");
         String full_name = etNama.getText().toString();
         Call<GlobalResponse> call = api.update_profile(email, full_name, base64Image, id_kota);
-        Log.d(TAG, email+","+full_name+","+Integer.toString(id_kota));
         // Set up progress before call
         final ProgressDialog pDialog = new ProgressDialog(this);
 
@@ -452,7 +461,6 @@ public class PengaturanActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<GlobalResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
                 pDialog.dismiss();
                 Toast.makeText(PengaturanActivity.this, "Update profile gagal, mohon coba kembali", Toast.LENGTH_SHORT).show();
             }

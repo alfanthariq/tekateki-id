@@ -11,7 +11,8 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -40,8 +41,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:background="@color/colorPrimaryDark"
-            android:padding="0dp">
+            android:background="@color/colorPrimary"
+            android:padding="0dp"
+            android:elevation="5dp">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -54,10 +56,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Jawaban TTS Edisi September ke - 2"
-                android:textSize="23sp"
+                android:textSize="20sp"
                 android:layout_marginTop="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="160dp"
+                android:layout_marginRight="10dp"
                 android:textStyle="bold"
                 android:id="@+id/tvJudul"/>
 
@@ -67,7 +69,7 @@
                 android:text="14 Februari 2018 20:00 WIB"
                 android:layout_below="@id/tvJudul"
                 android:textSize="12sp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="160dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:id="@+id/tvTanggal"/>

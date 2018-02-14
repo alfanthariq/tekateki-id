@@ -71,6 +71,7 @@
                     android:text="@string/unlogin_name"
                     android:textSize="20sp"
                     android:textStyle="bold"
+                    android:gravity="center"
                     android:theme="@style/EditTextTheme"
                     android:layout_gravity="center_horizontal"
                     android:id="@+id/etNama"
@@ -152,10 +153,10 @@
                 </RelativeLayout>
 
                 <Switch
-                    android:id="@+id/swNightMode"
+                    android:id="@+id/swTrivia"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dark_mode"
+                    android:text="@string/show_trivia"
                     android:theme="@style/EditTextTheme"
                     android:layout_marginTop="15dp"
                     android:gravity="left|center_vertical"/>

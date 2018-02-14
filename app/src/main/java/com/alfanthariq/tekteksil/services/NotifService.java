@@ -186,7 +186,7 @@ public class NotifService extends Service {
 
     private int getNotificationIcon() {
         boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
-        return useWhiteIcon ? R.mipmap.ic_launcher_round : R.mipmap.ic_launcher_round;
+        return useWhiteIcon ? R.drawable.ic_notif: R.mipmap.ic_launcher;
     }
 
     protected boolean isOnline() {

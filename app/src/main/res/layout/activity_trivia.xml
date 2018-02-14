@@ -5,28 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.alfanthariq.tekteksil.WelcomeActivity"
+    tools:context="com.alfanthariq.tekteksil.TriviaActivity"
     android:background="@color/colorPrimaryDark">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:gravity="center"
         android:paddingTop="10dp">
+
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="@string/unit_id_admob">
+        </com.google.android.gms.ads.AdView>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
+            android:text="Trivia"
             fontPath="fonts/Poppins-SemiBold.ttf"
             tools:ignore="MissingPrefix"
+            android:layout_marginTop="10dp"
             android:textSize="30sp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:orientation="horizontal"
         android:padding="20dp">
 
@@ -48,28 +60,29 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Game teka-teki silang Indonesia"
+                    android:text="Judul trivia"
                     android:textSize="20sp"
-                    android:id="@+id/tvTitleTTS"
+                    android:id="@+id/tvTitleTrivia"
                     fontPath="fonts/Poppins-Regular.ttf"
                     tools:ignore="MissingPrefix"
                     android:layout_marginBottom="20dp"/>
 
                 <TextView
-                    android:id="@+id/tvTTSWiki"
+                    android:id="@+id/tvIsiTrivia"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/tts_wiki"
-                    android:layout_below="@+id/tvTitleTTS"
+                    android:text="Isi Trivia"
+                    android:layout_below="@+id/tvTitleTrivia"
                     fontPath="fonts/Poppins-Light.ttf"
                     tools:ignore="MissingPrefix"
                     android:textSize="12sp"/>
 
                 <TextView
+                    android:id="@+id/tvSumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Wikipedia"
-                    android:layout_below="@+id/tvTTSWiki"
+                    android:text="Sumber trivia"
+                    android:layout_below="@+id/tvIsiTrivia"
                     android:layout_marginTop="10dp"
                     android:textAlignment="textEnd"
                     fontPath="fonts/Poppins-Light.ttf"
@@ -83,33 +96,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
         android:gravity="bottom">
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/card_bg_selector"
-            android:text="@string/mulai_main"
+            android:text="@string/tutup"
             android:gravity="center_horizontal|center_vertical"
             android:textSize="15sp"
             fontPath="fonts/Poppins-SemiBold.ttf"
             tools:ignore="MissingPrefix"
-            android:id="@+id/btnStart"
+            android:id="@+id/btnTutup"
             android:textAllCaps="false"
-            android:layout_marginBottom="20dp"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/card_bg_selector"
-            android:text="@string/login_start"
-            android:gravity="center_horizontal|center_vertical"
-            android:textSize="15sp"
-            fontPath="fonts/Poppins-SemiBold.ttf"
-            tools:ignore="MissingPrefix"
-            android:id="@+id/btnLogin"
-            android:textAllCaps="false"
-            android:layout_marginBottom="2dp"/>
+            android:layout_margin="20dp"/>
     </LinearLayout>
 </LinearLayout>

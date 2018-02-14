@@ -3,17 +3,9 @@ package com.alfanthariq.tekteksil.rest;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
-import okhttp3.ResponseBody;
 /**
  * Created by alfanthariq on 17/01/2018.
  */

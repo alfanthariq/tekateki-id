@@ -8,6 +8,7 @@ import com.alfanthariq.tekteksil.model.NewsResponse;
 import com.alfanthariq.tekteksil.model.ProvinsiResponse;
 import com.alfanthariq.tekteksil.model.GlobalResponse;
 import com.alfanthariq.tekteksil.model.RankingResponse;
+import com.alfanthariq.tekteksil.model.RiwayatResponse;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -80,6 +81,11 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("check_notif/")
     Call<GlobalResponse> checkNotif(@Field("android_id") String android_id);
+
+    @FormUrlEncoded
+    @POST("history_score/")
+    Call<RiwayatResponse> getRiwayat(@Field("email") String email, @Field("start_idx") int startIdx,
+                                     @Field("limit") int limit);
 
     Retrofit retrofit =
             new Retrofit.Builder()

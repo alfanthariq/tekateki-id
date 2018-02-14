@@ -2,14 +2,18 @@ package com.alfanthariq.tekteksil.fragment;
 
 
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +29,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alfanthariq.tekteksil.BuildConfig;
+import com.alfanthariq.tekteksil.DefaultExceptionHandler;
 import com.alfanthariq.tekteksil.LoginActivity;
 import com.alfanthariq.tekteksil.NewsActivity;
 import com.alfanthariq.tekteksil.PengaturanActivity;
 import com.alfanthariq.tekteksil.R;
+import com.alfanthariq.tekteksil.RiwayatActivity;
 import com.alfanthariq.tekteksil.adapter.AvailableAdapter;
 import com.alfanthariq.tekteksil.adapter.DownloadedAdapter;
 import com.alfanthariq.tekteksil.adapter.NewsAdapter;
@@ -86,7 +93,7 @@ public class BottomNavFragment extends Fragment {
     private RankingAdapter rankAdapter = null;
     private NewsAdapter newsAdapter = null;
     private View footer;
-    private Button btnPengaturan, btnRule, btnCaraMain, btnRiwayat,
+    private Button btnPengaturan, btnRule, btnRiwayat,
                     btnVersi, btnContact, btnShare, btnRate;
 
     // API
@@ -103,6 +110,7 @@ public class BottomNavFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(getActivity()));
         api = ApiInterface.retrofit.create(ApiInterface.class);
         mDbHelper = new GameSettingHelper(getContext());
         getPrefs();
@@ -261,9 +269,6 @@ public class BottomNavFragment extends Fragment {
                 return true; // ONLY if more data is actually being loaded; false otherwise.
             }
         });
-
-        int tipe = s.getSelectedItemPosition();
-        getRankPaging(tipe, last_idx_rank);
     }
 
     private void initNews(View view) {
@@ -330,7 +335,6 @@ public class BottomNavFragment extends Fragment {
 
         btnPengaturan = view.findViewById(R.id.btnPengaturan);
         btnRule = view.findViewById(R.id.btnRule);
-        btnCaraMain = view.findViewById(R.id.btnCaraMain);
         btnRiwayat = view.findViewById(R.id.btnRiwayat);
         btnVersi = view.findViewById(R.id.btnVersi);
         btnContact = view.findViewById(R.id.btnContact);
@@ -339,7 +343,6 @@ public class BottomNavFragment extends Fragment {
 
         btnPengaturan.setOnClickListener(new MyButtonClick());
         btnRule.setOnClickListener(new MyButtonClick());
-        btnCaraMain.setOnClickListener(new MyButtonClick());
         btnRiwayat.setOnClickListener(new MyButtonClick());
         btnVersi.setOnClickListener(new MyButtonClick());
         btnContact.setOnClickListener(new MyButtonClick());
@@ -410,20 +413,78 @@ public class BottomNavFragment extends Fragment {
                     getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
                     break;
                 case R.id.btnRule:
-                    break;
-                case R.id.btnCaraMain:
+                    LayoutInflater inflater= LayoutInflater.from(getContext());
+                    View view=inflater.inflate(R.layout.dialog_aturan, null);
+
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Aturan permainan")
+                            .setView(view)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
                     break;
                 case R.id.btnRiwayat:
+                    if (!pref.contains("email")) {
+                        Toast.makeText(getContext(), "Anda harus masuk ke akun untuk melihat riwayat permainan", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent intentRiwayat = new Intent(getContext(), RiwayatActivity.class);
+                        startActivity(intentRiwayat);
+                        getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
+                    }
                     break;
                 case R.id.btnVersi:
+                    String versionName = BuildConfig.VERSION_NAME;
+                    String appName = getResources().getString(R.string.app_name);
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Versi Aplikasi")
+                            .setMessage("Saat ini anda menggunakan "+appName+" dengan versi "+versionName)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
                     break;
                 case R.id.btnContact:
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Contact me")
+                            .setMessage("Anda bisa menghubungi developer melalui : \nEmail : contact@alfanthariq.com \nWhatsApp : +6287787088499")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
                     break;
                 case R.id.btnShare:
+                    Intent i = new Intent(Intent.ACTION_SEND);
+                    i.setType("text/plain");
+                    i.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.app_name));
+                    String sAux = "\nAyo isi waktumu dengan hal yang bermanfaat. Asah otakmu di Tekateki-ID\n\n";
+                    sAux = sAux + "market://details?id=" + getActivity().getPackageName()+" \n\n";
+                    i.putExtra(Intent.EXTRA_TEXT, sAux);
+                    startActivity(Intent.createChooser(i, "Berbagi dengan"));
                     break;
                 case R.id.btnRate:
+                    launchMarket();
                     break;
             }
+        }
+    }
+
+    private void launchMarket() {
+        Uri uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
+        Intent myAppLinkToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        try {
+            startActivity(myAppLinkToMarket);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getContext(), " unable to find market app", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -446,7 +507,6 @@ public class BottomNavFragment extends Fragment {
         });
 
         itemData = mDbHelper.getDownloaded();
-        //Log.i(TAG, "Downloaded : " + Integer.toString(itemData.getCount()));
         if (itemData.getCount()==0) {
             fragmentContainer.setBackgroundColor(getResources().getColor(R.color.colorWhite));
         } else {
@@ -486,7 +546,6 @@ public class BottomNavFragment extends Fragment {
         });
 
         itemData = mDbHelper.getAvailable();
-        //Log.i(TAG, "Available : " + Integer.toString(itemData.getCount()));
         if (itemData.getCount()==0) {
             fragmentContainer.setBackgroundColor(getResources().getColor(R.color.colorWhite));
         } else {
@@ -508,6 +567,7 @@ public class BottomNavFragment extends Fragment {
         } catch (Exception e){
 
         }
+        getAvailableTTS();
     }
 
     private void getRankPaging(int tipe, int startIdx){
@@ -543,7 +603,6 @@ public class BottomNavFragment extends Fragment {
             @Override
             public void onFailure(Call<RankingResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
                 swipeRefresh.setRefreshing(false);
             }
         });
@@ -579,7 +638,6 @@ public class BottomNavFragment extends Fragment {
             @Override
             public void onFailure(Call<NewsResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
                 swipeRefresh.setRefreshing(true);
             }
         });
@@ -592,6 +650,7 @@ public class BottomNavFragment extends Fragment {
             @Override
             public void onResponse(Call<AvailableTtsResponse>call, Response<AvailableTtsResponse> response) {
                 List<AvailableTts> data = response.body().getData();
+                //Log.d(TAG, "Data size : "+Integer.toString(data.size()));
                 for (int i = 0; i < data.size(); i++) {
                     int id = data.get(i).getIdTts();
                     String ed_string = data.get(i).getEdisiStr();
@@ -615,8 +674,8 @@ public class BottomNavFragment extends Fragment {
             @Override
             public void onFailure(Call<AvailableTtsResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
                 swipeRefresh.setRefreshing(false);
+                //Log.d(TAG, "Error failure : "+t.getMessage());
             }
         });
     }
@@ -651,7 +710,6 @@ public class BottomNavFragment extends Fragment {
             @Override
             public void onFailure(Call<GlobalResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
                 if (auth_type==0) {
                     pDialog.dismiss();
                     Toast.makeText(getContext(), "Logout gagal, mohon coba kembali", Toast.LENGTH_SHORT).show();

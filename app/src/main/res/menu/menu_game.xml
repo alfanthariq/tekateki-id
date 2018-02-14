@@ -23,8 +23,8 @@
         android:title="Tampilkan Guide"
         />
     <item
-        android:id="@+id/menu_hapus"
+        android:id="@+id/menu_trivia"
         android:orderInCategory="400"
-        android:title="Hapus TTS"
+        android:title="Show Trivia"
         />
 </menu>

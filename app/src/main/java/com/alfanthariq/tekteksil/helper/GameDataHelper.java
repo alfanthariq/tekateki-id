@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.util.Log;
-
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.io.File;
@@ -26,7 +24,6 @@ public class GameDataHelper extends SQLiteAssetHelper {
     public GameDataHelper(Context context, String DBName) {
         //super(context, DBName, context.getExternalFilesDir(null).getAbsolutePath(), null, DATABASE_VERSION);
         super(context, DBName, context.getFilesDir().getAbsolutePath()+File.separator+"tts", null, DATABASE_VERSION);
-        //Log.i(TAG, context.getFilesDir().getAbsolutePath()+File.separator+"tts"+File.separator+DBName);
     }
 
     public Cursor getItems()
@@ -49,7 +46,6 @@ public class GameDataHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "getItems >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -74,7 +70,6 @@ public class GameDataHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "getItemsById >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -97,7 +92,6 @@ public class GameDataHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "getQuestion >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -123,7 +117,6 @@ public class GameDataHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "getQuestionList >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -140,7 +133,6 @@ public class GameDataHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "updateValue >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -161,7 +153,6 @@ public class GameDataHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "getSetting >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -183,7 +174,6 @@ public class GameDataHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "updateSetting >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }
@@ -200,7 +190,6 @@ public class GameDataHelper extends SQLiteAssetHelper {
         }
         catch (SQLException mSQLException)
         {
-            Log.e(TAG, "getTableCount >>"+ mSQLException.toString());
             throw mSQLException;
         }
     }

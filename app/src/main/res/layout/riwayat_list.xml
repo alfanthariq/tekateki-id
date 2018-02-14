@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="7dp"
-    android:paddingBottom="7dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="7dp"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
     android:background="@drawable/card_bg_selector"
     android:descendantFocusability="afterDescendants"
     xmlns:awesome="http://schemas.android.com/apk/res-auto"
@@ -17,20 +17,23 @@
         android:orientation="vertical"
         android:gravity="center"
         android:layout_height="match_parent"
-        android:padding="2dp">
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:orientation="vertical">
-
-           <ImageView
-               android:layout_width="30dp"
-               android:layout_height="30dp"
-               android:src="@drawable/list_tts"/>
-        </LinearLayout>
-
+            android:text="130"
+            android:gravity="center"
+            android:textSize="30sp"
+            android:id="@+id/tvSkor"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="poin"
+            android:gravity="center"
+            android:textSize="13sp"
+            android:layout_marginTop="-5dp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="0dp"
@@ -43,43 +46,44 @@
         >
 
         <TextView
-            android:id="@+id/tvEditionStr"
+            android:id="@+id/tvEdisiTTS"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="false"
             android:textStyle="bold"
-            android:textSize="12dp"
-            android:text="Edisi Lebaran"
+            android:textSize="15sp"
+            android:text="Edisi TTS"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
-            android:id="@+id/tvEditionDate"
+            android:id="@+id/tvTglKirim"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="false"
-            android:textSize="8dp"
-            android:text="12 Maret 2018"
+            android:textSize="12sp"
+            android:text="Tanggal kirim jawaban"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center|right"
+        android:orientation="vertical"
+        android:gravity="center"
         android:layout_height="match_parent"
         android:paddingLeft="5dp"
         android:paddingRight="5dp">
 
         <cyd.awesome.material.AwesomeButton
-            android:id="@+id/btnDownload"
+            android:id="@+id/btnShareFB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
             android:padding="10dp"
+            android:textSize="20sp"
 
-            awesome:awesome_type="bootstrap_success"
+            awesome:awesome_type="bootstrap_primary"
             awesome:awesome_rounded_corners="true"
 
-            awesome:awesome_icon="FA_DOWNLOAD"
+            awesome:awesome_icon="FA_FACEBOOK_OFFICIAL"
             awesome:awesome_font="font_awesome"
 
             />

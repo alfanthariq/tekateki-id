@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alfanthariq.tekteksil.DefaultExceptionHandler;
 import com.alfanthariq.tekteksil.GameActivity;
 import com.alfanthariq.tekteksil.R;
 import com.alfanthariq.tekteksil.helper.GameSettingHelper;
@@ -48,6 +48,7 @@ public class DownloadedAdapter extends CursorAdapter {
         this.listView = listView;
         this.ctx = context;
         this.act = act;
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(act));
     }
 
     @Override
@@ -149,7 +150,7 @@ public class DownloadedAdapter extends CursorAdapter {
         try {
             date = iso8601Format.parse(tglTerbit);
         } catch (ParseException e) {
-            Log.e(TAG, "Parsing ISO8601 datetime failed", e);
+
         }
 
         String edisi_str = cursor.getString(cursor.getColumnIndexOrThrow("edition_str"));

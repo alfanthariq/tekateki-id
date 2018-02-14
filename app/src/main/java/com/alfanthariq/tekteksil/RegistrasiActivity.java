@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -62,6 +61,7 @@ public class RegistrasiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrasi);
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -135,7 +135,6 @@ public class RegistrasiActivity extends AppCompatActivity {
         int id_kabkota = kabkota.getInt(kabkota.getColumnIndexOrThrow("_id"));
         Call<GlobalResponse> call = api.reg(0, inputEmail.getText().toString(), pwd_hash,
                 "", inputName.getText().toString(), id_kabkota);
-        Log.d(TAG, "Password : "+pwd_hash);
         // Set up progress before call
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Sending registration data ...");
@@ -161,7 +160,6 @@ public class RegistrasiActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<GlobalResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
                 pDialog.dismiss();
                 Toast.makeText(RegistrasiActivity.this, "Registrasi gagal", Toast.LENGTH_SHORT).show();
             }
@@ -226,7 +224,6 @@ public class RegistrasiActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ProvinsiResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
             }
         });
     }
@@ -253,7 +250,6 @@ public class RegistrasiActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<KabkotaResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
             }
         });
     }

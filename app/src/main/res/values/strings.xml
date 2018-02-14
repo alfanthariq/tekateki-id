@@ -46,9 +46,10 @@
     <string name="title_pengaturan">Pengaturan</string>
 
     //Pengaturan
-    <string name="auto_notif">Pemberitahuan TTS baru</string>
+    <string name="auto_notif">Pemberitahuan info terbaru</string>
     <string name="dark_mode">Mode malam</string>
     <string name="unlogin_name">Anda belum masuk ke aplikasi</string>
+    <string name="show_trivia">Tampilkan trivia</string>
 
     //Guide
     <string name="desc_timer">Untuk mengetahui sudah berapa lama anda menyelesaikan TTS ini, anda bisa melakukan tap pada menu ini</string>
@@ -65,9 +66,12 @@
     // Facebook
     <string name="facebook_app_id">1823762604583482</string>
     <string name="fb_login_protocol_scheme">fb1823762604583482</string>
+    <string name="fb_debug_hash">wEgY53JMKxyqyNeMJbdvlQ0rJOU=</string>
+    <string name="fb_release_hash">1Wrnnv/1Osu5Mk6dPRsZ7XFB3SI=</string>
 
     //Admob
-    <string name="unit_id_admob">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="unit_id_sample">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="unit_id_admob">ca-app-pub-3323952393155404/8253592837</string>
 
     <string name="empty_text">Tidak ada data yang bisa ditampilkan</string>
     <string name="tts_wiki">
@@ -76,4 +80,19 @@
     </string>
     <string name="mulai_main">Mulai Main</string>
     <string name="login_start">Masuk ke Akun</string>
+    <string name="tutup">Tutup</string>
+    <string name="aturan">
+        - Anda mendapat 2 poin dari setiap huruf yang benar \n\n
+        - Tidak ada pengurangan skor jika ada jawaban yang salah \n\n
+        - Poin anda akan dikurangi 2 poin setiap 5 menit waktu pengerjaan
+          (Contoh : Anda mengerjakan TTS dalam waktu 20 menit, jadi poin anda akan dikurangi sebanyak 20/5*2 = 8 poin. Berlaku pembulatan kebawah)
+    </string>
+    <string name="title_riwayat">Riwayat permainan</string>
+
+    //Rate me
+    <string name="rate_dialog_title">Rate Tekateki-ID</string>
+    <string name="rate_dialog_message">Jika anda menyukai game ini, bersediakah anda memberikan rating? Tidak lama, hanya beberapa detik saja. Terima kasih untuk supportnya!</string>
+    <string name="rate_dialog_ok">Rate Sekarang</string>
+    <string name="rate_dialog_cancel">Ingatkan Nanti</string>
+    <string name="rate_dialog_no">Tidak, Terima kasih</string>
 </resources>

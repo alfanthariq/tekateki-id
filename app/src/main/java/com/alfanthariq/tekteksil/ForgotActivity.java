@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -47,6 +46,7 @@ public class ForgotActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot);
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -142,7 +142,6 @@ public class ForgotActivity extends AppCompatActivity {
     private void SendRequest(){
         String pwd_hash = MD5(inputPassword.getText().toString());
         Call<GlobalResponse> call = api.send_forgot(inputEmail.getText().toString(), pwd_hash);
-        Log.d(TAG, "Password : "+pwd_hash);
         // Set up progress before call
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Mengirim request ...");
@@ -157,7 +156,6 @@ public class ForgotActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<GlobalResponse>call, Response<GlobalResponse> response) {
                 if (response.body()!=null) {
-                    Log.e(TAG, new Gson().toJson(response.body()));
                     String message = response.body().getMessage();
                     Boolean status = response.body().isStatus();
                     pDialog.dismiss();
@@ -169,7 +167,6 @@ public class ForgotActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<GlobalResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
                 pDialog.dismiss();
                 Toast.makeText(ForgotActivity.this, "Kirim permintaan gagal, silahkan coba kembali", Toast.LENGTH_SHORT).show();
             }

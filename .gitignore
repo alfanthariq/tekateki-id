@@ -7,3 +7,6 @@
 /build
 /captures
 .externalNativeBuild
+app/release/app-release.apk
+app/release/output.json
+app/release/Tekateki-ID.apk

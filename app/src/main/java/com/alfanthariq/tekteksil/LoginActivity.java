@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -42,6 +41,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.List;
 
+import mehdi.sakout.fancybuttons.FancyButton;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,7 +55,8 @@ public class LoginActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private EditText inputEmail, inputPassword;
     private TextInputLayout inputLayoutEmail, inputLayoutPassword;
-    private Button btnSignUp, btnSignUpFb;
+    private Button btnSignUp;
+    private FancyButton btnSignUpFb;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     private TextView txtReg, txtForgot;
@@ -65,12 +66,13 @@ public class LoginActivity extends AppCompatActivity {
     private ApiInterface api;
 
     // Instance of Facebook Class
-    private FacebookSdk facebook;
     private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
+
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -113,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
         inputEmail = (EditText) findViewById(R.id.input_email);
         inputPassword = (EditText) findViewById(R.id.input_password);
         btnSignUp = (Button) findViewById(R.id.btn_signup);
-        btnSignUpFb = (Button) findViewById(R.id.btn_signup_fb);
+        btnSignUpFb = (FancyButton) findViewById(R.id.btn_signup_fb);
 
         inputEmail.addTextChangedListener(new MyTextWatcher(inputEmail));
         inputPassword.addTextChangedListener(new MyTextWatcher(inputPassword));
@@ -211,7 +213,6 @@ public class LoginActivity extends AppCompatActivity {
         String pwd_hash = MD5(password);
         Call<LoginResponse> call = api.login(auth_type, email, user_id,
                                              pwd_hash, fullname);
-        Log.d(TAG, "Password : "+pwd_hash);
         // Set up progress before call
         final ProgressDialog pDialog = new ProgressDialog(this);
         pDialog.setMessage("Authenticating ...");
@@ -227,8 +228,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<LoginResponse>call, Response<LoginResponse> response) {
                 try {
                     if (response.body()!=null) {
-                        Log.e(TAG, new Gson().toJson(response.body()));
-
                         if (auth_type==0) {
                             JSONObject jsonObj = new JSONObject(new Gson().toJson(response.body()));
                             if (jsonObj.has("data")) {
@@ -278,7 +277,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<LoginResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
                 pDialog.dismiss();
                 Toast.makeText(LoginActivity.this, "Login gagal", Toast.LENGTH_SHORT).show();
             }
@@ -354,7 +352,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         try {
-                            Log.e(TAG, response.toString());
                             String id = object.getString("id");
                             String first_name = object.getString("first_name");
                             String last_name = object.getString("last_name");

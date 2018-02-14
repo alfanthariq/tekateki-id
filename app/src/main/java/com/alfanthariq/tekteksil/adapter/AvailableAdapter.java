@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alfanthariq.tekteksil.DefaultExceptionHandler;
 import com.alfanthariq.tekteksil.R;
 import com.alfanthariq.tekteksil.helper.GameSettingHelper;
 
@@ -53,6 +53,7 @@ public class AvailableAdapter extends CursorAdapter {
         super(context, cursor, 0);
         this.listView = listView;
         this.act = act;
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(act));
     }
 
     @Override
@@ -96,7 +97,7 @@ public class AvailableAdapter extends CursorAdapter {
         try {
             date = iso8601Format.parse(tglTerbit);
         } catch (ParseException e) {
-            Log.e(TAG, "Parsing ISO8601 datetime failed", e);
+
         }
 
         String edisi_str = cursor.getString(cursor.getColumnIndexOrThrow("edition_str"));
@@ -141,14 +142,12 @@ public class AvailableAdapter extends CursorAdapter {
             int count;
             try {
                 URL url = new URL(f_url[0]);
-                Log.d(TAG, f_url[0]);
                 URLConnection conection = url.openConnection();
                 conection.connect();
 
                 // this will be useful so that you can show a tipical 0-100%
                 // progress bar
                 int lenghtOfFile = conection.getContentLength();
-                Log.d(TAG, Integer.toString(lenghtOfFile));
 
                 // download the file
                 InputStream input = new BufferedInputStream(url.openStream(),
@@ -181,7 +180,6 @@ public class AvailableAdapter extends CursorAdapter {
                 berhasil = true;
             } catch (Exception e) {
                 berhasil = false;
-                Log.e("Error: ", e.getMessage());
             }
 
             return null;

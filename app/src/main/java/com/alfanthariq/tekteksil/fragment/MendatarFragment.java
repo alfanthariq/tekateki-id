@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.alfanthariq.tekteksil.DefaultExceptionHandler;
 import com.alfanthariq.tekteksil.GameActivity;
 import com.alfanthariq.tekteksil.R;
 import com.alfanthariq.tekteksil.adapter.QuestionAdapter;
@@ -41,6 +42,8 @@ public class MendatarFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_mendatar, container, false);
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(getActivity()));
+
         listQuestion = (ListView) v.findViewById(R.id.list);
         mDbHelper = new GameDataHelper(getContext(), ((GameActivity) getActivity()).DBNAME);
         itemData = mDbHelper.getQuestionList(0);

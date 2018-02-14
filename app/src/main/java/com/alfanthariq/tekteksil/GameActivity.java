@@ -29,12 +29,13 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -82,6 +83,7 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import me.grantland.widget.AutofitTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -102,7 +104,8 @@ public class GameActivity extends AppCompatActivity
     int numOfCol, numOfRow, lastX, lastY,
             orientation, questionIdx, actionBarHeight,
             hours, mins, secs, skor, id_tts, isSent, isSubmitAvailable;
-    private TextView txtQuest, title_app;
+    private TextView txtQuest;
+    private AutofitTextView title_app;
     private Button btnOrient;
     private LinearLayout gameCont, questionLayout;
     private DisplayMetrics metrics;
@@ -130,6 +133,8 @@ public class GameActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.inflateMenu(R.menu.menu_game);
@@ -143,20 +148,25 @@ public class GameActivity extends AppCompatActivity
                 .build()
         );
 
+        /*MobileAds.initialize(this, "ca-app-pub-3323952393155404~9977259115");
+        AdRequest request = new AdRequest.Builder()
+                .build();
+        mAdView = findViewById(R.id.adView);
+        mAdView.loadAd(request);*/
         MobileAds.initialize(this, "ca-app-pub-3323952393155404~9977259115");
         AdRequest request = new AdRequest.Builder()
                 .addTestDevice("0C7A997C83E80A8B3BFA16B8091B05A3")  // An example device ID
                 .build();
         if (request.isTestDevice(this)) {
             mAdView = findViewById(R.id.adView);
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(adRequest);
+            //AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(request);
         }
 
         getPrefs();
         api = ApiInterface.retrofit.create(ApiInterface.class);
 
-        title_app = (TextView) findViewById(R.id.toolbar_title);
+        title_app = (AutofitTextView) findViewById(R.id.toolbar_title);
         Intent intent = getIntent();
         DBNAME = intent.getStringExtra("dbname");
         title_app.setText(intent.getStringExtra("ed_str"));
@@ -246,7 +256,7 @@ public class GameActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<GlobalResponse>call, Response<GlobalResponse> response) {
                 if (response.body()!=null) {
-                    Log.e(TAG, new Gson().toJson(response.body()));
+                    //Log.e(TAG, new Gson().toJson(response.body()));
                     String message = response.body().getMessage();
                     Boolean status = response.body().isStatus();
                     pDialog.dismiss();
@@ -255,13 +265,18 @@ public class GameActivity extends AppCompatActivity
                         SettingHelper.setKirim(id_tts);
                     }
                     Toast.makeText(GameActivity.this, message, Toast.LENGTH_SHORT).show();
+                    if (pref.getBoolean("showTrivia", true)) {
+                        Intent intent = new Intent(GameActivity.this, TriviaActivity.class);
+                        intent.putExtra("dbname", DBNAME);
+                        startActivity(intent);
+                    }
+                    finish();
                 }
             }
 
             @Override
             public void onFailure(Call<GlobalResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
                 pDialog.dismiss();
                 Toast.makeText(GameActivity.this, "Gagal mengirim skor. Silahkan coba beberapa saat lagi", Toast.LENGTH_SHORT).show();
             }
@@ -280,6 +295,16 @@ public class GameActivity extends AppCompatActivity
                     Boolean status = response.body().isStatus();
                     if (status) {
                         isSubmitAvailable = Integer.valueOf(message);
+                        MenuItem menuItem = menu.findItem(R.id.menu_submit);
+                        if (!isLogin) {
+                            menuItem.setIcon(new IconicsDrawable(GameActivity.this).icon(FontAwesome.Icon.faw_check).color(getResources().getColor(R.color.colorPrimaryDark)).sizeDp(20));
+                        } else {
+                            if ((isSent==0) && (isSubmitAvailable==1)) {
+                                menuItem.setIcon(new IconicsDrawable(GameActivity.this).icon(FontAwesome.Icon.faw_check).color(Color.WHITE).sizeDp(20));
+                            } else {
+                                menuItem.setIcon(new IconicsDrawable(GameActivity.this).icon(FontAwesome.Icon.faw_check).color(getResources().getColor(R.color.colorPrimaryDark)).sizeDp(20));
+                            }
+                        }
                     }
                 }
             }
@@ -287,7 +312,6 @@ public class GameActivity extends AppCompatActivity
             @Override
             public void onFailure(Call<GlobalResponse>call, Throwable t) {
                 // Log error here since request failed
-                Log.e(TAG, t.toString());
             }
         });
     }
@@ -303,7 +327,7 @@ public class GameActivity extends AppCompatActivity
                                 .cancelable(false)
                                 .textColor(R.color.colorTextPrimary)
                                 .id(1),
-                        TapTarget.forToolbarMenuItem(toolbar, R.id.menu_submit, "Kirim jawaban", getResources().getString(R.string.desc_timer))
+                        TapTarget.forToolbarMenuItem(toolbar, R.id.menu_submit, "Kirim jawaban", getResources().getString(R.string.desc_submit_ans))
                                 .dimColor(R.color.colorBlack)
                                 .outerCircleColor(R.color.colorAccent)
                                 .targetCircleColor(R.color.colorWhite)
@@ -448,7 +472,6 @@ public class GameActivity extends AppCompatActivity
         mGridLayout = (GridLayout)findViewById(R.id.grid);
 
         mDbHelper = new GameDataHelper(this, DBNAME);
-        Log.i(TAG, "Jumlah tabel = "+Integer.toString(mDbHelper.getTableCount()));
         Cursor settingData = mDbHelper.getSettings();
         try{
             millis = settingData.getInt(settingData.getColumnIndex("milis"));
@@ -466,6 +489,11 @@ public class GameActivity extends AppCompatActivity
         mGridLayout.setColumnCount(numOfCol);
 
         itemData.moveToPosition(-1);
+
+        DisplayMetrics displayMetrics = GameActivity.this.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels;
+        final int w = (int) dpWidth / 9;
+        final int h = w;
 
         try {
             while (itemData.moveToNext()) {
@@ -503,8 +531,8 @@ public class GameActivity extends AppCompatActivity
                 } else {
                     badge = badgeX;
                 }
-                tView.setCompoundDrawablesWithIntrinsicBounds(new TextDrawable(badge), null, null, null);
-                tView.setPadding(30, 5, 5, 5);
+                tView.setCompoundDrawablesWithIntrinsicBounds(new TextDrawable(badge, w, h), null, null, null);
+                tView.setPadding((w/2) - 5, 0, 0,0);
                 tView.setSelectAllOnFocus(true);
                 tView.addTextChangedListener(new CustomTextWatcher(tView));
                 tView.setOnKeyListener(new CustomKeyListener(tView));
@@ -525,8 +553,6 @@ public class GameActivity extends AppCompatActivity
                     public void onGlobalLayout() {
 
                         final int MARGIN = 1;
-                        int w = 80;
-                        int h = 80;
 
                         Cursor itemData = mDbHelper.getItems();
                         itemData.moveToPosition(-1);
@@ -686,7 +712,6 @@ public class GameActivity extends AppCompatActivity
             int cRow = gridView[questionIdx].getIdY();
             int cCol = gridView[questionIdx].getIdX();
             //Toast.makeText(this, "Col " +Integer.toString(cCol)+" , Row : "+Integer.toString(cRow), Toast.LENGTH_SHORT).show();
-            Log.i(TAG, cCol+","+cRow);
             Cursor questData = mDbHelper.getQuestion(cCol, cRow, orientation);
             if (questData.getCount()>0) {
                 txtQuest.setText(questData.getString(questData.getColumnIndex("quest")));
@@ -729,7 +754,7 @@ public class GameActivity extends AppCompatActivity
         if (!isLogin) {
             menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(getResources().getColor(R.color.colorPrimaryDark)).sizeDp(20));
         } else {
-            if (isSent==0 && isSubmitAvailable!=0) {
+            if ((isSent==0) && (isSubmitAvailable==1)) {
                 menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(Color.WHITE).sizeDp(20));
             } else {
                 menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(getResources().getColor(R.color.colorPrimaryDark)).sizeDp(20));
@@ -764,7 +789,46 @@ public class GameActivity extends AppCompatActivity
             guide.start();
             return true;
         } else if (id == R.id.menu_cek_jawaban) {
-            cekJawaban();
+            if (cekJawaban()){
+                if ((isSent==1) && (isSubmitAvailable==0)){
+                    new AlertDialog.Builder(this)
+                            .setTitle("Selamat, permainan selesai")
+                            .setMessage("Kerja yang bagus kawan. Kamu berhasil menyelesaikan TTS ini. Selamat !")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (pref.getBoolean("showTrivia", true)) {
+                                        Intent intent = new Intent(GameActivity.this, TriviaActivity.class);
+                                        intent.putExtra("dbname", DBNAME);
+                                        startActivity(intent);
+                                    }
+                                    finish();
+                                }
+                            })
+                            .show();
+                } else {
+                    new AlertDialog.Builder(this)
+                            .setTitle("Selamat, jawaban anda sudah benar")
+                            .setMessage("Silahkan mengirim jawaban. Jawaban yang anda kirim tidak bisa dikirim ulang. Skor akan terekam. Lanjutkan mengirim jawaban ?")
+                            .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    SubmitScore();
+                                }
+                            })
+                            .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
+                }
+            } else {
+                if ((isSent==1) && (isSubmitAvailable==0)){
+                    Toast.makeText(this, "Masih ada jawaban yang salah", Toast.LENGTH_SHORT).show();
+                }
+            }
             return true;
         } else if (id == R.id.menu_submit) {
             if (isLogin) {
@@ -780,7 +844,7 @@ public class GameActivity extends AppCompatActivity
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (cekJawaban()) {
-
+                                        SubmitScore();
                                     } else {
                                         new AlertDialog.Builder(GameActivity.this)
                                                 .setTitle("Konfirmasi")
@@ -813,6 +877,12 @@ public class GameActivity extends AppCompatActivity
                 Toast.makeText(this, "Anda harus login untuk mengirim jawaban", Toast.LENGTH_SHORT).show();
             }
 
+            return true;
+        } else if (id == R.id.menu_trivia) {
+            Intent intent = new Intent(GameActivity.this, TriviaActivity.class);
+            intent.putExtra("dbname", DBNAME);
+            startActivity(intent);
+            finish();
             return true;
         }
 

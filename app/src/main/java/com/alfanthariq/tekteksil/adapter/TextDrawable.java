@@ -15,19 +15,22 @@ public class TextDrawable extends Drawable {
 
     private final String text;
     private final Paint paint;
+    private final int width, height;
 
-    public TextDrawable(String text) {
+    public TextDrawable(String text, int width, int height) {
         this.text = text;
         this.paint = new Paint();
+        this.width = width;
+        this.height = height;
         paint.setColor(Color.BLACK);
-        paint.setTextSize(16f);
+        paint.setTextSize(12f);
         paint.setAntiAlias(true);
         paint.setTextAlign(Paint.Align.LEFT);
     }
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawText(text, -25, -20, paint);
+        canvas.drawText(text, -(width/3), -(height/4), paint);
     }
 
     @Override

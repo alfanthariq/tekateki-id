@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -84,14 +86,18 @@ public class MainActivity extends AppCompatActivity {
                 .build()
         );
 
-        MobileAds.initialize(this, "ca-app-pub-3323952393155404~9977259115");
+        /*MobileAds.initialize(this, "ca-app-pub-3323952393155404~9977259115");
+        AdRequest request = new AdRequest.Builder()
+                .build();
+        mAdView = findViewById(R.id.adView);
+        mAdView.loadAd(request);*/
         AdRequest request = new AdRequest.Builder()
                 .addTestDevice("0C7A997C83E80A8B3BFA16B8091B05A3")  // An example device ID
                 .build();
         if (request.isTestDevice(this)) {
             mAdView = findViewById(R.id.adView);
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(adRequest);
+            //AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(request);
         }
 
         if (Build.VERSION.SDK_INT >= 23) {
@@ -243,19 +249,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
 
         currentFragment = adapter.getCurrentFragment();
-
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Setting custom colors for notification
-                AHNotification notification = new AHNotification.Builder()
-                        .setText("99")
-                        .setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.color_notification_back))
-                        .setTextColor(ContextCompat.getColor(MainActivity.this, R.color.color_notification_text))
-                        .build();
-                bottomNavigation.setNotification(notification, 1);
-            }
-        }, 3000);
     }
 
     private void initGuide(){

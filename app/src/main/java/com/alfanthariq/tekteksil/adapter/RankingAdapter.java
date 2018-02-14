@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.alfanthariq.tekteksil.DefaultExceptionHandler;
 import com.alfanthariq.tekteksil.R;
 import com.alfanthariq.tekteksil.model.RankingObject;
 
@@ -30,6 +31,7 @@ public class RankingAdapter extends BaseAdapter {
     public RankingAdapter(Activity activity, List<RankingObject> rankItems){
         this.activity = activity;
         this.rankItems = rankItems;
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(activity));
     }
 
     @Override
@@ -71,10 +73,19 @@ public class RankingAdapter extends BaseAdapter {
         skor.setText(Integer.toString(m.getTotal_skor()));
         String img64 = m.getImg64();
         Bitmap decodedImage;
-        if (img64!=null && !img64.equals("")) {
-            byte[] imageBytes = Base64.decode(img64, Base64.DEFAULT);
-            decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-            ivFoto.setImageBitmap(decodedImage);
+        if (img64!=null) {
+            if (!img64.equals("")) {
+                try {
+                    img64 = img64.replaceAll("\n", "");
+                    byte[] imageBytes = Base64.decode(img64, Base64.DEFAULT);
+                    decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                    ivFoto.setImageBitmap(decodedImage);
+                } catch (Exception e) {
+                    ivFoto.setImageDrawable(activity.getResources().getDrawable(R.drawable.user_default));
+                }
+            } else {
+                ivFoto.setImageDrawable(activity.getResources().getDrawable(R.drawable.user_default));
+            }
         } else {
             ivFoto.setImageDrawable(activity.getResources().getDrawable(R.drawable.user_default));
         }
