@@ -32,6 +32,7 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -133,7 +134,7 @@ public class GameActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
+        //Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -147,21 +148,6 @@ public class GameActivity extends AppCompatActivity
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
-
-        /*MobileAds.initialize(this, "ca-app-pub-3323952393155404~9977259115");
-        AdRequest request = new AdRequest.Builder()
-                .build();
-        mAdView = findViewById(R.id.adView);
-        mAdView.loadAd(request);*/
-        MobileAds.initialize(this, "ca-app-pub-3323952393155404~9977259115");
-        AdRequest request = new AdRequest.Builder()
-                .addTestDevice("0C7A997C83E80A8B3BFA16B8091B05A3")  // An example device ID
-                .build();
-        if (request.isTestDevice(this)) {
-            mAdView = findViewById(R.id.adView);
-            //AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(request);
-        }
 
         getPrefs();
         api = ApiInterface.retrofit.create(ApiInterface.class);
@@ -222,7 +208,6 @@ public class GameActivity extends AppCompatActivity
             guide.start();
         }
         getSubmitStatus();
-        //startTimer();
     }
 
     @Override
@@ -327,7 +312,7 @@ public class GameActivity extends AppCompatActivity
                                 .cancelable(false)
                                 .textColor(R.color.colorTextPrimary)
                                 .id(1),
-                        TapTarget.forToolbarMenuItem(toolbar, R.id.menu_submit, "Kirim jawaban", getResources().getString(R.string.desc_submit_ans))
+                        TapTarget.forToolbarMenuItem(toolbar, R.id.menu_cek_jawaban, "Cek jawaban", getResources().getString(R.string.desc_cek))
                                 .dimColor(R.color.colorBlack)
                                 .outerCircleColor(R.color.colorAccent)
                                 .targetCircleColor(R.color.colorWhite)
@@ -365,10 +350,7 @@ public class GameActivity extends AppCompatActivity
                     // to the sequence
                     @Override
                     public void onSequenceFinish() {
-                        editor = pref.edit();
-                        editor.putBoolean("game_guide", true);
-                        editor.apply();
-                        Toast.makeText(GameActivity.this, "Selamat, anda sudah siap memulai permainan", Toast.LENGTH_SHORT).show();
+                        showRule();
                     }
 
                     @Override
@@ -750,17 +732,22 @@ public class GameActivity extends AppCompatActivity
         menuItem = menu.findItem(R.id.timer);
         menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_clock_o).color(Color.WHITE).sizeDp(20));
 
+        menuItem = menu.findItem(R.id.menu_cek_jawaban);
+        menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(Color.WHITE).sizeDp(20));
+
         menuItem = menu.findItem(R.id.menu_submit);
         if (!isLogin) {
-            menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(getResources().getColor(R.color.colorPrimaryDark)).sizeDp(20));
+            //menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(getResources().getColor(R.color.colorPrimaryDark)).sizeDp(20));
+            menuItem.setVisible(false);
         } else {
             if ((isSent==0) && (isSubmitAvailable==1)) {
-                menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(Color.WHITE).sizeDp(20));
+                //menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(Color.WHITE).sizeDp(20));
+                menuItem.setVisible(true);
             } else {
-                menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(getResources().getColor(R.color.colorPrimaryDark)).sizeDp(20));
+                //menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(getResources().getColor(R.color.colorPrimaryDark)).sizeDp(20));
+                menuItem.setVisible(false);
             }
         }
-        //menuItem.setEnabled(isLogin);
         return true;
     }
 
@@ -878,11 +865,10 @@ public class GameActivity extends AppCompatActivity
             }
 
             return true;
-        } else if (id == R.id.menu_trivia) {
-            Intent intent = new Intent(GameActivity.this, TriviaActivity.class);
-            intent.putExtra("dbname", DBNAME);
+        } else if (id == R.id.menu_howto) {
+            Intent intent = new Intent(GameActivity.this, HowtoActivity.class);
             startActivity(intent);
-            finish();
+            overridePendingTransition(R.anim.enter, R.anim.exit);
             return true;
         }
 
@@ -1014,5 +1000,40 @@ public class GameActivity extends AppCompatActivity
         secs = (int) (currMillis / 1000) % 60;
         int minusScore = (mins / 5) * 2;
         return minusScore;
+    }
+
+    private void showRule(){
+        LayoutInflater inflater= LayoutInflater.from(this);
+        View view=inflater.inflate(R.layout.dialog_aturan, null);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Aturan permainan")
+                .setView(view)
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        new AlertDialog.Builder(GameActivity.this)
+                                .setTitle("Cara bermain")
+                                .setMessage("Apakah anda ingin melihat panduan / tutorial mengisi jawaban di Tekateki-ID?")
+                                .setCancelable(false)
+                                .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(GameActivity.this, HowtoActivity.class);
+                                        startActivity(intent);
+                                        overridePendingTransition(R.anim.enter, R.anim.exit);
+                                    }
+                                })
+                                .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Toast.makeText(GameActivity.this, "Selamat, anda sudah siap memulai permainan", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .show();
+                    }
+                })
+                .show();
     }
 }

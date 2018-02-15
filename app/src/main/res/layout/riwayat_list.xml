@@ -9,32 +9,7 @@
     android:paddingBottom="3dp"
     android:background="@drawable/card_bg_selector"
     android:descendantFocusability="afterDescendants"
-    xmlns:awesome="http://schemas.android.com/apk/res-auto"
     android:elevation="5dp">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_height="match_parent"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="130"
-            android:gravity="center"
-            android:textSize="30sp"
-            android:id="@+id/tvSkor"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="poin"
-            android:gravity="center"
-            android:textSize="13sp"
-            android:layout_marginTop="-5dp"/>
-    </LinearLayout>
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -72,20 +47,19 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp">
 
-        <cyd.awesome.material.AwesomeButton
-            android:id="@+id/btnShareFB"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:padding="10dp"
-            android:textSize="20sp"
-
-            awesome:awesome_type="bootstrap_primary"
-            awesome:awesome_rounded_corners="true"
-
-            awesome:awesome_icon="FA_FACEBOOK_OFFICIAL"
-            awesome:awesome_font="font_awesome"
-
-            />
+            android:text="130"
+            android:gravity="center"
+            android:textSize="30sp"
+            android:id="@+id/tvSkor"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="poin"
+            android:gravity="center"
+            android:textSize="13sp"
+            android:layout_marginTop="-5dp"/>
     </LinearLayout>
 </LinearLayout>

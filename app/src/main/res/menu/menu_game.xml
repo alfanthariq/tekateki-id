@@ -8,23 +8,23 @@
         android:title="Time Lapsed"
         app:showAsAction="always" />
     <item
-        android:id="@+id/menu_submit"
+        android:id="@+id/menu_cek_jawaban"
         android:orderInCategory="100"
         android:title="Submit"
         app:showAsAction="always" />
     <item
-        android:id="@+id/menu_cek_jawaban"
+        android:id="@+id/menu_submit"
         android:orderInCategory="200"
-        android:title="Cek Jawaban"
+        android:title="Kirim jawaban"
         />
     <item
         android:id="@+id/menu_guide"
         android:orderInCategory="300"
-        android:title="Tampilkan Guide"
+        android:title="Tampilkan panduan"
         />
     <item
-        android:id="@+id/menu_trivia"
+        android:id="@+id/menu_howto"
         android:orderInCategory="400"
-        android:title="Show Trivia"
+        android:title="Cara bermain"
         />
 </menu>

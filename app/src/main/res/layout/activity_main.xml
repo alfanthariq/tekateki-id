@@ -31,7 +31,6 @@
                 android:textSize="20sp"
                 android:id="@+id/toolbar_title" />
         </android.support.v7.widget.Toolbar>
-
     </android.support.design.widget.AppBarLayout>
 
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigationViewPager
@@ -40,17 +39,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         />
-
-    <com.google.android.gms.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="@string/unit_id_admob">
-    </com.google.android.gms.ads.AdView>
 
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/bottom_navigation"

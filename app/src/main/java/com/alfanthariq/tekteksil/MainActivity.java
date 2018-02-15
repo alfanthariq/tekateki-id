@@ -86,20 +86,6 @@ public class MainActivity extends AppCompatActivity {
                 .build()
         );
 
-        /*MobileAds.initialize(this, "ca-app-pub-3323952393155404~9977259115");
-        AdRequest request = new AdRequest.Builder()
-                .build();
-        mAdView = findViewById(R.id.adView);
-        mAdView.loadAd(request);*/
-        AdRequest request = new AdRequest.Builder()
-                .addTestDevice("0C7A997C83E80A8B3BFA16B8091B05A3")  // An example device ID
-                .build();
-        if (request.isTestDevice(this)) {
-            mAdView = findViewById(R.id.adView);
-            //AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(request);
-        }
-
         if (Build.VERSION.SDK_INT >= 23) {
             String[] PERMISSIONS = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
             if (!hasPermissions(getApplicationContext(), PERMISSIONS)) {

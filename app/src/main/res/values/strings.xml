@@ -44,6 +44,8 @@
     <string name="title_lupa">Lupa password</string>
     <string name="title_berita">Berita</string>
     <string name="title_pengaturan">Pengaturan</string>
+    <string name="title_howto">Cara bermain</string>
+    <string name="title_riwayat">Riwayat permainan</string>
 
     //Pengaturan
     <string name="auto_notif">Pemberitahuan info terbaru</string>
@@ -52,11 +54,12 @@
     <string name="show_trivia">Tampilkan trivia</string>
 
     //Guide
-    <string name="desc_timer">Untuk mengetahui sudah berapa lama anda menyelesaikan TTS ini, anda bisa melakukan tap pada menu ini</string>
-    <string name="desc_submit_ans">Untuk mengirim hasil jawaban TTS, anda bisa melakukan tap pada menu ini</string>
-    <string name="desc_menu_more">Menu - menu lain yang bisa anda gunakan bisa diakses dengan melakukan tap pada menu ini</string>
-    <string name="desc_list_quest">Anda bisa melihat daftar pertanyaan TTS dengan melakukan tap pada panel ini</string>
-    <string name="desc_orientation">Untuk mengubah orientasi horizontal / vertical, anda bisa melakukan tap pada tombol ini</string>
+    <string name="desc_timer">Untuk mengetahui sudah berapa lama anda menyelesaikan TTS ini, anda bisa menekan menu ini</string>
+    <string name="desc_cek">Untuk mengetahui jawaban anda sudah benar atau belum, anda bisa menekan menu ini</string>
+    <string name="desc_submit_ans">Untuk mengirim hasil jawaban TTS, anda bisa menekan menu ini</string>
+    <string name="desc_menu_more">Menu - menu lain yang bisa anda gunakan (kirim jawaban, tampilkan guide dan cara bermain) bisa diakses dengan menekan menu ini</string>
+    <string name="desc_list_quest">Anda bisa melihat daftar pertanyaan TTS dengan menyentuh panel ini</string>
+    <string name="desc_orientation">Untuk mengubah orientasi horizontal / vertical, anda bisa menekan tombol ini</string>
     <string name="desc_available">Anda dapat melihat daftar TTS yang tersedia untuk diunduh pada menu ini</string>
     <string name="desc_unduh">Anda dapat melihat daftar TTS yang sudah diunduh pada menu ini</string>
     <string name="desc_rank">Anda dapat melihat daftar peringkat dan skor terakhir semua pengguna pada menu ini</string>
@@ -87,7 +90,14 @@
         - Poin anda akan dikurangi 2 poin setiap 5 menit waktu pengerjaan
           (Contoh : Anda mengerjakan TTS dalam waktu 20 menit, jadi poin anda akan dikurangi sebanyak 20/5*2 = 8 poin. Berlaku pembulatan kebawah)
     </string>
-    <string name="title_riwayat">Riwayat permainan</string>
+    <string name="howto">
+        - Pilih kolom atau baris untuk memunculkan pertanyaan \n\n
+        - Orientasi awal memakai orientasi horizontal, anda bisa mengubah orientasi dengan tombol "Toggle" \n\n
+        - Ketik jawaban yang anda inginkan \n\n
+        - Anda bisa melihat daftar pertanyaan dengan menekan panel pertanyaan \n\n
+        - Anda bisa langsung menuju kotak yang dituju dengan memilih salah satu pertanyaan di daftar pertanyaan \n\n
+    </string>
+
 
     //Rate me
     <string name="rate_dialog_title">Rate Tekateki-ID</string>

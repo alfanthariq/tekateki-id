@@ -87,7 +87,7 @@ public class RiwayatAdapter extends BaseAdapter {
         //TextView tglTerbit = (TextView) convertView.findViewById(R.id.tvTglTerbit);
         TextView tglKirim = (TextView) convertView.findViewById(R.id.tvTglKirim);
         TextView skor = (TextView) convertView.findViewById(R.id.tvSkor);
-        AwesomeButton shareButton = (AwesomeButton) convertView.findViewById(R.id.btnShareFB);
+        //AwesomeButton shareButton = (AwesomeButton) convertView.findViewById(R.id.btnShareFB);
 
         // getting movie data for the row
         obj = riwayatItems.get(position);
@@ -96,7 +96,7 @@ public class RiwayatAdapter extends BaseAdapter {
         //tglTerbit.setText("Tgl. terbit TTS : "+);
         tglKirim.setText("Tgl. kirim jawaban : "+dateFormat(obj.getTglKirim(), "dd MMMM yyyy"));
         skor.setText(Integer.toString(obj.getSkor()));
-        shareButton.setOnClickListener(new View.OnClickListener() {
+        /*shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Boolean isPermission = pref.getBoolean("sharePermission", false);
@@ -107,7 +107,6 @@ public class RiwayatAdapter extends BaseAdapter {
                         @Override
                         public void onSuccess(LoginResult loginResult) {
                             ShareDialog shareDialog;
-                            FacebookSdk.sdkInitialize(activity);
                             shareDialog = new ShareDialog(activity);
                             ShareLinkContent linkContent = new ShareLinkContent.Builder()
                                     .setQuote("Saya mendapat skor "+Integer.toString(obj.getSkor())+
@@ -118,6 +117,7 @@ public class RiwayatAdapter extends BaseAdapter {
                             editor = pref.edit();
                             editor.putBoolean("sharePermission", true);
                             editor.apply();
+                            Toast.makeText(activity, "Sukses share", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -125,6 +125,7 @@ public class RiwayatAdapter extends BaseAdapter {
                             editor = pref.edit();
                             editor.putBoolean("sharePermission", false);
                             editor.apply();
+                            Toast.makeText(activity, "Canceled", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -136,7 +137,6 @@ public class RiwayatAdapter extends BaseAdapter {
                     });
                 } else {
                     ShareDialog shareDialog;
-                    FacebookSdk.sdkInitialize(activity);
                     shareDialog = new ShareDialog(activity);
                     ShareLinkContent linkContent = new ShareLinkContent.Builder()
                             .setQuote("Saya mendapat skor "+Integer.toString(obj.getSkor())+
@@ -146,7 +146,7 @@ public class RiwayatAdapter extends BaseAdapter {
                     shareDialog.show(linkContent);
                 }
             }
-        });
+        });*/
 
         return convertView;
     }

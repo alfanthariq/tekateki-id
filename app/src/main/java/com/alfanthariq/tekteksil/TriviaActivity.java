@@ -39,21 +39,6 @@ public class TriviaActivity extends AppCompatActivity {
                 .build()
         );
 
-        /*MobileAds.initialize(this, "ca-app-pub-3323952393155404~9977259115");
-        AdRequest request = new AdRequest.Builder()
-                .build();
-        mAdView = findViewById(R.id.adView);
-        mAdView.loadAd(request);*/
-        MobileAds.initialize(this, "ca-app-pub-3323952393155404~9977259115");
-        AdRequest request = new AdRequest.Builder()
-                .addTestDevice("0C7A997C83E80A8B3BFA16B8091B05A3")  // An example device ID
-                .build();
-        if (request.isTestDevice(this)) {
-            mAdView = findViewById(R.id.adView);
-            //AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(request);
-        }
-
         tvJudul = (TextView) findViewById(R.id.tvTitleTrivia);
         tvIsi = (TextView) findViewById(R.id.tvIsiTrivia);
         tvSumber = (TextView) findViewById(R.id.tvSumber);

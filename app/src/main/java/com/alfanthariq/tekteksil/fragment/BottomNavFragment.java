@@ -171,11 +171,6 @@ public class BottomNavFragment extends Fragment {
                 try {
                     Cursor myCursor = mDbHelper.getAvailable();
                     qAdapter.swapCursor(myCursor);
-                    if (myCursor.getCount()==0) {
-                        fragmentContainer.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                    } else {
-                        fragmentContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                    }
                 } catch (Exception e){
 
                 }
@@ -183,11 +178,6 @@ public class BottomNavFragment extends Fragment {
                 try {
                     Cursor myCursor = mDbHelper.getDownloaded();
                     dAdapter.swapCursor(myCursor);
-                    if (myCursor.getCount()==0) {
-                        fragmentContainer.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                    } else {
-                        fragmentContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                    }
                 } catch (Exception e){
 
                 }
@@ -507,11 +497,7 @@ public class BottomNavFragment extends Fragment {
         });
 
         itemData = mDbHelper.getDownloaded();
-        if (itemData.getCount()==0) {
-            fragmentContainer.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-        } else {
-            fragmentContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-        }
+
         try {
             dAdapter = new DownloadedAdapter(getContext(), itemData, listView, getActivity());
             listView.setAdapter(dAdapter);
@@ -546,11 +532,7 @@ public class BottomNavFragment extends Fragment {
         });
 
         itemData = mDbHelper.getAvailable();
-        if (itemData.getCount()==0) {
-            fragmentContainer.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-        } else {
-            fragmentContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-        }
+
         try {
             qAdapter = new AvailableAdapter(getContext(), itemData, listView, getActivity());
             listView.setAdapter(qAdapter);
@@ -664,11 +646,6 @@ public class BottomNavFragment extends Fragment {
                 swipeRefresh.setRefreshing(false);
                 Cursor itemDataNew = mDbHelper.getAvailable();
                 itemData = qAdapter.swapCursor(itemDataNew);
-                if (itemDataNew.getCount()==0) {
-                    fragmentContainer.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                } else {
-                    fragmentContainer.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                }
             }
 
             @Override

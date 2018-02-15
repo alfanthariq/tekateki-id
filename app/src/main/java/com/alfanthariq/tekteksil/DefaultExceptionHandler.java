@@ -20,7 +20,6 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
 
     @Override
     public void uncaughtException(Thread thread, final Throwable ex) {
-
         Intent intent = new Intent(activity, WelcomeActivity.class);
         //intent.putExtra(activity.getString(R.string.app_crashed), ex);
         //Log.d("ERROR","---------" + ex.getMessage());

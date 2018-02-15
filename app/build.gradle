@@ -6,8 +6,8 @@ android {
         applicationId "com.alfanthariq.tekteksil"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 3
-        versionName "Beta 3 (14/02/2018)"
+        versionCode 5
+        versionName "Beta 5 (15/02/2018)"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
