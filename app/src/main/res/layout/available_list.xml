@@ -30,7 +30,6 @@
                android:layout_height="30dp"
                android:src="@drawable/list_tts"/>
         </LinearLayout>
-
     </LinearLayout>
     <LinearLayout
         android:layout_width="0dp"
@@ -48,7 +47,7 @@
             android:layout_height="wrap_content"
             android:singleLine="false"
             android:textStyle="bold"
-            android:textSize="12dp"
+            android:textSize="15sp"
             android:text="Edisi Lebaran"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -57,8 +56,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="false"
-            android:textSize="8dp"
+            android:textSize="10sp"
             android:text="12 Maret 2018"
+            android:textColor="@color/colorAccent"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
     <LinearLayout

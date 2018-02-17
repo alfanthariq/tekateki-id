@@ -16,7 +16,7 @@
     sothree:umanoScrollableView="@+id/list"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.alfanthariq.tekteksil.GameActivity"
+    tools:context="com.alfanthariq.tts.GameActivity"
     android:background="@color/colorPrimary"
     android:descendantFocusability="beforeDescendants">
 
@@ -96,16 +96,18 @@
             android:orientation="horizontal"
             android:padding="5dp">
 
-            <TextView
-                android:id="@+id/txtQuestion"
+            <me.grantland.widget.AutofitTextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:textAlignment="center"
-                android:gravity="center"
+                android:singleLine="false"
+                android:maxLines="2"
+                autofit:minTextSize="5sp"
                 android:textSize="13dp"
+                android:gravity="center"
                 android:textColor="@color/colorWhite"
-                android:text="Silahkan pilih kolom atau baris"/>
+                android:text="Silahkan pilih kolom atau baris"
+                android:id="@+id/txtQuestion"/>
 
             <Button
                 android:id="@+id/btnOrientation"
