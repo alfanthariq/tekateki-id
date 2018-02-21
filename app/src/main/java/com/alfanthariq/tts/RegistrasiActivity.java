@@ -151,8 +151,14 @@ public class RegistrasiActivity extends AppCompatActivity {
                     String message = response.body().getMessage();
                     Boolean status = response.body().isStatus();
                     pDialog.dismiss();
-                    RegistrasiActivity.this.finish();
-                    Toast.makeText(RegistrasiActivity.this, message, Toast.LENGTH_SHORT).show();
+                    if (!message.equals("1")) {
+                        RegistrasiActivity.this.finish();
+                        Toast.makeText(RegistrasiActivity.this, message, Toast.LENGTH_SHORT).show();
+                    } else {
+                        inputLayoutEmail.setError(getString(R.string.err_msg_email_exists));
+                        requestFocus(inputEmail);
+                        Toast.makeText(RegistrasiActivity.this, "Registrasi gagal, email sudah terdaftar", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 

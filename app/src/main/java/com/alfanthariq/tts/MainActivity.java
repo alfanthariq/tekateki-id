@@ -3,6 +3,7 @@ package com.alfanthariq.tts;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -12,11 +13,15 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.alfanthariq.tts.adapter.BottomNavAdapter;
@@ -104,6 +109,38 @@ public class MainActivity extends AppCompatActivity {
         if (ref) {
             currentFragment.getAvailableTTS();
         }
+        Boolean info_dialog = intent.getBooleanExtra("load_info_dialog", false);
+        String html = intent.getStringExtra("html");
+        if (info_dialog) {
+            showInfo(html);
+        }
+        Boolean ref_news = intent.getBooleanExtra("refresh_news", false);
+        if (ref_news) {
+            currentFragment.getNewsPaging(0);
+        }
+    }
+
+    private void showInfo(String html){
+        LayoutInflater inflater= LayoutInflater.from(this);
+        View view=inflater.inflate(R.layout.dialog_info_notif, null);
+        WebView wv = view.findViewById(R.id.wvContent);
+        wv.getSettings().setJavaScriptEnabled(false);
+        wv.getSettings().setBuiltInZoomControls(false);
+        wv.setInitialScale(1);
+        wv.getSettings().setUseWideViewPort(true);
+        wv.loadData(html, "text/html", "UTF-8");
+
+        new AlertDialog.Builder(this)
+                .setTitle("Info")
+                .setView(view)
+                .setCancelable(false)
+                .setPositiveButton("Tutup", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .show();
     }
 
     private void getPrefs() {

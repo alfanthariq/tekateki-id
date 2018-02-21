@@ -161,9 +161,30 @@ public class NotifService extends Service {
         PendingIntent pendingIntent = null;
         Intent notificationIntent = null;
         switch (tipe){
-            case 1:
+            case 1: //new TTS
                 notificationIntent = new Intent(NotifService.this, MainActivity.class);
                 notificationIntent.putExtra("auto_refresh", true);
+                notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                pendingIntent =
+                        TaskStackBuilder.create(NotifService.this)
+                                .addNextIntent(notificationIntent)
+                                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                break;
+            case 2: // info
+                notificationIntent = new Intent(NotifService.this, MainActivity.class);
+                notificationIntent.putExtra("load_info_dialog", true);
+                notificationIntent.putExtra("html", isi);
+                notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                pendingIntent =
+                        TaskStackBuilder.create(NotifService.this)
+                                .addNextIntent(notificationIntent)
+                                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                break;
+            case 3: //new News
+                notificationIntent = new Intent(NotifService.this, MainActivity.class);
+                notificationIntent.putExtra("refresh_news", true);
                 notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                         | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 pendingIntent =
@@ -176,7 +197,7 @@ public class NotifService extends Service {
                 .setSmallIcon(getNotificationIcon())
                 .setContentTitle("Tekateki-ID")
                 .setColor(getResources().getColor(R.color.colorPrimaryDark))
-                .setContentText(isi)
+                .setContentText(judul)
                 .setContentIntent(pendingIntent);
         notification = notifBuilder.build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;

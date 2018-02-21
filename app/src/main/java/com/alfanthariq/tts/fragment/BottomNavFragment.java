@@ -616,7 +616,7 @@ public class BottomNavFragment extends Fragment {
         });
     }
 
-    private void getNewsPaging(int startIdx){
+    public void getNewsPaging(int startIdx){
         swipeRefresh.setRefreshing(true);
         Call<NewsResponse> call = api.getNews(startIdx, limit);
         call.enqueue(new Callback<NewsResponse>() {

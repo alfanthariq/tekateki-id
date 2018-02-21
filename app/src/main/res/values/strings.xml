@@ -25,6 +25,7 @@
     <string name="btn_sign_up_fb">Masuk dengan Facebook</string>
     <string name="btn_forgot">Kirim</string>
     <string name="err_msg_email">Isikan alamat email yang valid</string>
+    <string name="err_msg_email_exists">Email ini sudah terdaftar</string>
     <string name="err_msg_password">Isikan password anda</string>
     <string name="err_msg_password_k">Konfirmasi password tidak sama</string>
     <string name="err_msg_nama">Isikan nama anda</string>
