@@ -262,12 +262,14 @@ public class GameActivity extends AppCompatActivity
                         isSubmitAvailable = Integer.valueOf(message);
                         MenuItem menuItem = menu.findItem(R.id.menu_submit);
                         if (!isLogin) {
-                            menuItem.setIcon(new IconicsDrawable(GameActivity.this).icon(FontAwesome.Icon.faw_check).color(getResources().getColor(R.color.colorPrimaryDark)).sizeDp(20));
+                            menuItem.setVisible(false);
                         } else {
                             if ((isSent==0) && (isSubmitAvailable==1)) {
-                                menuItem.setIcon(new IconicsDrawable(GameActivity.this).icon(FontAwesome.Icon.faw_check).color(Color.WHITE).sizeDp(20));
+                                //menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(Color.WHITE).sizeDp(20));
+                                menuItem.setVisible(true);
                             } else {
-                                menuItem.setIcon(new IconicsDrawable(GameActivity.this).icon(FontAwesome.Icon.faw_check).color(getResources().getColor(R.color.colorPrimaryDark)).sizeDp(20));
+                                //menuItem.setIcon(new IconicsDrawable(this).icon(FontAwesome.Icon.faw_check).color(getResources().getColor(R.color.colorPrimaryDark)).sizeDp(20));
+                                menuItem.setVisible(false);
                             }
                         }
                     }
@@ -759,7 +761,7 @@ public class GameActivity extends AppCompatActivity
             return true;
         } else if (id == R.id.menu_cek_jawaban) {
             if (cekJawaban()){
-                if ((isSent==1) && (isSubmitAvailable==0)){
+                if (!isLogin){
                     new AlertDialog.Builder(this)
                             .setTitle("Selamat, permainan selesai")
                             .setMessage("Kerja yang bagus kawan. Kamu berhasil menyelesaikan TTS ini. Selamat !")
@@ -778,28 +780,48 @@ public class GameActivity extends AppCompatActivity
                             })
                             .show();
                 } else {
-                    new AlertDialog.Builder(this)
-                            .setTitle("Selamat, jawaban anda sudah benar")
-                            .setMessage("Silahkan mengirim jawaban. Jawaban yang anda kirim tidak bisa dikirim ulang. Skor akan terekam. Lanjutkan mengirim jawaban ?")
-                            .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    SubmitScore();
-                                }
-                            })
-                            .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    SettingHelper = new GameSettingHelper(GameActivity.this);
-                                    SettingHelper.setKirim(id_tts);
-                                }
-                            })
-                            .show();
+                    if (isSent==0) {
+                        if (isSubmitAvailable==1) {
+                            new AlertDialog.Builder(this)
+                                    .setTitle("Selamat, jawaban anda sudah benar")
+                                    .setMessage("Silahkan mengirim jawaban. Jawaban yang anda kirim tidak bisa dikirim ulang. Skor akan terekam. Lanjutkan mengirim jawaban ?")
+                                    .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            SubmitScore();
+                                        }
+                                    })
+                                    .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            SettingHelper = new GameSettingHelper(GameActivity.this);
+                                            SettingHelper.setKirim(id_tts);
+                                        }
+                                    })
+                                    .show();
+                        } else {
+                            new AlertDialog.Builder(this)
+                                    .setTitle("Selamat, permainan selesai")
+                                    .setMessage("Kerja yang bagus kawan. Kamu berhasil menyelesaikan TTS ini. Selamat !")
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            SettingHelper = new GameSettingHelper(GameActivity.this);
+                                            SettingHelper.setKirim(id_tts);
+                                            if (pref.getBoolean("showTrivia", true)) {
+                                                Intent intent = new Intent(GameActivity.this, TriviaActivity.class);
+                                                intent.putExtra("dbname", DBNAME);
+                                                startActivity(intent);
+                                            }
+                                            finish();
+                                        }
+                                    })
+                                    .show();
+                        }
+                    }
                 }
             } else {
-                if ((isSent==1) && (isSubmitAvailable==0)){
-                    Toast.makeText(this, "Masih ada jawaban yang salah", Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(this, "Masih ada jawaban yang salah", Toast.LENGTH_SHORT).show();
             }
             return true;
         } else if (id == R.id.menu_submit) {
