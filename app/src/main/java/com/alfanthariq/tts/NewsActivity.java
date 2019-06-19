@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.alfanthariq.tts.model.NewsData;
 import com.alfanthariq.tts.model.NewsDataResponse;
 import com.alfanthariq.tts.rest.ApiInterface;
+import com.alfanthariq.tts.rest.ServiceGenerator;
 
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class NewsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_news);
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
 
-        api = ApiInterface.retrofit.create(ApiInterface.class);
+        api = ServiceGenerator.createService(ApiInterface.class);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -16,6 +16,7 @@ import com.alfanthariq.tts.model.RiwayatDetail;
 import com.alfanthariq.tts.model.RiwayatObject;
 import com.alfanthariq.tts.model.RiwayatResponse;
 import com.alfanthariq.tts.rest.ApiInterface;
+import com.alfanthariq.tts.rest.ServiceGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class RiwayatActivity extends AppCompatActivity {
                 .build()
         );
 
-        api = ApiInterface.retrofit.create(ApiInterface.class);
+        api = ServiceGenerator.createService(ApiInterface.class);
         getPrefs();
 
         listView = (ListView) findViewById(R.id.list);

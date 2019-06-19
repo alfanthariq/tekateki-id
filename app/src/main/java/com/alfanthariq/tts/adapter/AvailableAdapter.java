@@ -17,10 +17,12 @@ import com.alfanthariq.tts.R;
 import com.alfanthariq.tts.helper.GameSettingHelper;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -41,18 +43,20 @@ public class AvailableAdapter extends CursorAdapter {
     private ListView listView;
     private Cursor myCursor;
     private Activity act;
+    private Context context;
 
     // Progress Dialog
     public static final int progress_bar_type = 0;
 
     // File url to download
-    private static String base_url = "http://api.alfanthariq.com/cdn/tts/";
+    private static String base_url = "https://api.alfanthariq.com/cdn/tts/";
 
 
     public AvailableAdapter(Context context, Cursor cursor, ListView listView, Activity act) {
         super(context, cursor, 0);
         this.listView = listView;
         this.act = act;
+        this.context = context;
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(act));
     }
 
@@ -142,44 +146,86 @@ public class AvailableAdapter extends CursorAdapter {
             int count;
             try {
                 URL url = new URL(f_url[0]);
-                URLConnection conection = url.openConnection();
-                conection.connect();
+                HttpURLConnection conection = (HttpURLConnection) url.openConnection();
+                conection.setInstanceFollowRedirects(false);
+                int response = conection.getResponseCode();
 
-                // this will be useful so that you can show a tipical 0-100%
-                // progress bar
-                int lenghtOfFile = conection.getContentLength();
+                if(response == 200) {
+                    // this will be useful so that you can show a tipical 0-100%
+                    // progress bar
+                    int lenghtOfFile = conection.getContentLength();
 
-                // download the file
-                InputStream input = new BufferedInputStream(url.openStream(),
-                        8192);
+                    // download the file
+                    //                BufferedInputStream input = new BufferedInputStream(url.openStream(),
+                    //                        8192);
 
-                // Output stream
-                OutputStream output = new FileOutputStream(basePath + File.separator
-                        + fileName);
+                    InputStream input = conection.getInputStream();
+
+                    // Output stream
+                    FileOutputStream output = new FileOutputStream(basePath + File.separator
+                            + fileName);
+                    //BufferedOutputStream bos = new BufferedOutputStream(output);
+
+                    byte data[] = new byte[1024];
+                    long total = 0;
+
+                    while ((count = input.read(data)) != -1) {
+                        total += count;
+                        // publishing the progress....
+                        // After this onProgressUpdate will be called
+                        publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+
+                        // writing data to file
+                        output.write(data, 0, count);
+                    }
+
+                    // flushing output
+                    output.flush();
+
+                    // closing streams
+                    output.close();
+                    input.close();
+                    berhasil = true;
+                } else {
+                    System.out.println("Length response : "+response);
+                }
+
+                /*URL url = new URL(f_url[0]);
+                HttpURLConnection c = (HttpURLConnection) url.openConnection();
+                c.setRequestMethod("GET");
+                c.setDoOutput(true);
+                c.setRequestProperty("Accept-Encoding", "identity");
+                c.connect();
+                int lenghtOfFile = c.getContentLength();
+                System.out.println("Length URL : "+f_url[0]);
+                System.out.println("Length : "+lenghtOfFile);
+                String path = basePath + File.separator
+                        + fileName;
+                File file = new File(path);
+                FileOutputStream fos = new FileOutputStream(file);
+                InputStream is = c.getInputStream();
+                BufferedInputStream bis = new BufferedInputStream(is);
 
                 byte data[] = new byte[1024];
-
                 long total = 0;
 
-                while ((count = input.read(data)) != -1) {
+                while ((count = bis.read(data)) != -1) {
                     total += count;
                     // publishing the progress....
                     // After this onProgressUpdate will be called
                     publishProgress("" + (int) ((total * 100) / lenghtOfFile));
 
                     // writing data to file
-                    output.write(data, 0, count);
+                    fos.write(data, 0, count);
                 }
 
-                // flushing output
-                output.flush();
-
                 // closing streams
-                output.close();
-                input.close();
-                berhasil = true;
+                fos.close();
+                is.close();
+                berhasil = true;*/
             } catch (Exception e) {
                 berhasil = false;
+                System.out.println(e.getMessage());
             }
 
             return null;
@@ -197,9 +243,9 @@ public class AvailableAdapter extends CursorAdapter {
                 mDBHelper.setDownloaded(id);
                 myCursor = mDBHelper.getAvailable();
                 AvailableAdapter.this.swapCursor(myCursor);
-                Toast.makeText(mContext, "TTS berhasil di download", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "TTS berhasil di download", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(mContext, "Timeout. TTS gagal di download", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Timeout. TTS gagal di download", Toast.LENGTH_SHORT).show();
             }
         }
 

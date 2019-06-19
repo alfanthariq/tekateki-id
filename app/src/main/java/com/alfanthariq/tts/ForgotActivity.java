@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.alfanthariq.tts.model.GlobalResponse;
 import com.alfanthariq.tts.rest.ApiInterface;
+import com.alfanthariq.tts.rest.ServiceGenerator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -69,7 +70,7 @@ public class ForgotActivity extends AppCompatActivity {
         inputEmail.addTextChangedListener(new ForgotActivity.MyTextWatcher(inputEmail));
         inputPassword.addTextChangedListener(new ForgotActivity.MyTextWatcher(inputPassword));
 
-        api = ApiInterface.retrofit.create(ApiInterface.class);
+        api = ServiceGenerator.createService(ApiInterface.class);
         getPrefs();
     }
 

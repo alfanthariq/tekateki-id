@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.alfanthariq.tts.model.LoginDetail;
 import com.alfanthariq.tts.model.LoginResponse;
 import com.alfanthariq.tts.rest.ApiInterface;
+import com.alfanthariq.tts.rest.ServiceGenerator;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -136,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        api = ApiInterface.retrofit.create(ApiInterface.class);
+        api = ServiceGenerator.createService(ApiInterface.class);
         getPrefs();
     }
 

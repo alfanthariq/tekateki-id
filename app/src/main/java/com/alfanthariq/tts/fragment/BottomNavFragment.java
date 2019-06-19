@@ -51,6 +51,7 @@ import com.alfanthariq.tts.model.RankingDetail;
 import com.alfanthariq.tts.model.RankingObject;
 import com.alfanthariq.tts.model.RankingResponse;
 import com.alfanthariq.tts.rest.ApiInterface;
+import com.alfanthariq.tts.rest.ServiceGenerator;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
@@ -110,7 +111,7 @@ public class BottomNavFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(getActivity()));
-        api = ApiInterface.retrofit.create(ApiInterface.class);
+        api = ServiceGenerator.createService(ApiInterface.class);
         mDbHelper = new GameSettingHelper(getContext());
         getPrefs();
         last_idx_rank = 0;
@@ -236,6 +237,8 @@ public class BottomNavFragment extends Fragment {
                     last_idx_rank = 0;
                     int tipe = s.getSelectedItemPosition();
                     getRankPaging(tipe, last_idx_rank);
+                } else {
+                    swipeRefresh.setRefreshing(false);
                 }
             }
         });
@@ -277,6 +280,8 @@ public class BottomNavFragment extends Fragment {
                     newsAdapter.notifyDataSetChanged();
                     last_idx_news = 0;
                     getNewsPaging(last_idx_news);
+                } else {
+                    swipeRefresh.setRefreshing(false);
                 }
             }
         });
@@ -646,7 +651,7 @@ public class BottomNavFragment extends Fragment {
             @Override
             public void onFailure(Call<NewsResponse>call, Throwable t) {
                 // Log error here since request failed
-                swipeRefresh.setRefreshing(true);
+                swipeRefresh.setRefreshing(false);
             }
         });
     }

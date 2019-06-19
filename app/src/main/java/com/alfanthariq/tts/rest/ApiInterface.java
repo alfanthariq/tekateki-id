@@ -10,6 +10,10 @@ import com.alfanthariq.tts.model.GlobalResponse;
 import com.alfanthariq.tts.model.RankingResponse;
 import com.alfanthariq.tts.model.RiwayatResponse;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -86,10 +90,4 @@ public interface ApiInterface {
     @POST("history_score/")
     Call<RiwayatResponse> getRiwayat(@Field("email") String email, @Field("start_idx") int startIdx,
                                      @Field("limit") int limit);
-
-    Retrofit retrofit =
-            new Retrofit.Builder()
-                    .baseUrl(BASE_URL) // REMEMBER TO END with /
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
 }

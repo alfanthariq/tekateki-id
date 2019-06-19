@@ -25,6 +25,7 @@ import com.alfanthariq.tts.MainActivity;
 import com.alfanthariq.tts.R;
 import com.alfanthariq.tts.model.GlobalResponse;
 import com.alfanthariq.tts.rest.ApiInterface;
+import com.alfanthariq.tts.rest.ServiceGenerator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +49,7 @@ public class NotifService extends Service {
 
     @Override
     public void onCreate() {
-        api = ApiInterface.retrofit.create(ApiInterface.class);
+        api = ServiceGenerator.createService(ApiInterface.class);
         android_id = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         // To avoid cpu-blocking, we create a background handler to run our service

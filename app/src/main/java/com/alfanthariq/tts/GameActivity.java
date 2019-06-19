@@ -52,6 +52,7 @@ import com.alfanthariq.tts.helper.GameDataHelper;
 import com.alfanthariq.tts.helper.GameSettingHelper;
 import com.alfanthariq.tts.model.GlobalResponse;
 import com.alfanthariq.tts.rest.ApiInterface;
+import com.alfanthariq.tts.rest.ServiceGenerator;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
@@ -130,7 +131,7 @@ public class GameActivity extends AppCompatActivity
         );
 
         getPrefs();
-        api = ApiInterface.retrofit.create(ApiInterface.class);
+        api = ServiceGenerator.createService(ApiInterface.class);
 
         title_app = (AutofitTextView) findViewById(R.id.toolbar_title);
         Intent intent = getIntent();

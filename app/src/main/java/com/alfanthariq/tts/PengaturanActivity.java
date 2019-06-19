@@ -41,6 +41,7 @@ import com.alfanthariq.tts.model.KabkotaResponse;
 import com.alfanthariq.tts.model.Provinsi;
 import com.alfanthariq.tts.model.ProvinsiResponse;
 import com.alfanthariq.tts.rest.ApiInterface;
+import com.alfanthariq.tts.rest.ServiceGenerator;
 import com.alfanthariq.tts.services.NotifService;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -109,7 +110,7 @@ public class PengaturanActivity extends AppCompatActivity {
 
         etNama.addTextChangedListener(new MyTextWatcher(etNama));
 
-        api = ApiInterface.retrofit.create(ApiInterface.class);
+        api = ServiceGenerator.createService(ApiInterface.class);
         getPrefs();
 
         swAutoNotif.setChecked(isMyServiceRunning(NotifService.class));

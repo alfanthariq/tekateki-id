@@ -28,6 +28,7 @@ import com.alfanthariq.tts.model.Provinsi;
 import com.alfanthariq.tts.model.ProvinsiResponse;
 import com.alfanthariq.tts.model.GlobalResponse;
 import com.alfanthariq.tts.rest.ApiInterface;
+import com.alfanthariq.tts.rest.ServiceGenerator;
 
 import java.util.List;
 
@@ -97,7 +98,7 @@ public class RegistrasiActivity extends AppCompatActivity {
 
         btnDaftar.setOnClickListener(startReg);
 
-        api = ApiInterface.retrofit.create(ApiInterface.class);
+        api = ServiceGenerator.createService(ApiInterface.class);
         mDbHelper = new GameSettingHelper(this);
         int provCount = mDbHelper.getProvCount();
 
