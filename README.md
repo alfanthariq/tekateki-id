@@ -6,7 +6,7 @@ Android crossword game with ranked system
 
 MIT License
 
-Copyright (c) [2018] [Nafi Alfanthariq]
+Copyright(c)2018 Nafi Alfanthariq
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
