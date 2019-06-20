@@ -21,6 +21,9 @@ import com.alfanthariq.tts.model.NewsDataResponse;
 import com.alfanthariq.tts.rest.ApiInterface;
 import com.alfanthariq.tts.rest.ServiceGenerator;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -69,7 +72,19 @@ public class NewsActivity extends AppCompatActivity {
         int id = intent.getIntExtra("id", 0);
         String img64 = intent.getStringExtra("img64");
         tvJudul.setText(intent.getStringExtra("judul"));
-        tvTanggal.setText(intent.getStringExtra("tanggal"));
+        String tgl = intent.getStringExtra("tanggal");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date newDate = null;
+        String date = "";
+        try {
+            newDate = format.parse(tgl);
+            format = new SimpleDateFormat("dd MMMM yyyy");
+            date = format.format(newDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        tvTanggal.setText(date);
         progBar = (ProgressBar) findViewById(R.id.progress_bar_news);
         Bitmap decodedImage;
         if (img64!=null) {

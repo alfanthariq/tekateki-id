@@ -201,14 +201,14 @@ public class BottomNavFragment extends Fragment {
         fragmentContainer = (FrameLayout) view.findViewById(R.id.frameBg);
 
         String[] arraySpinner = new String[] {
-                "Bulan ini", "Semester ini", "Tahun ini"
+                "Bulan ini", "Semester ini", "Tahun ini", "Semua"
         };
         final Spinner s = (Spinner) view.findViewById(R.id.spin_tipe);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         s.setAdapter(adapter);
-        s.setSelection(0);
+        s.setSelection(3);
         s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
